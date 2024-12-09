@@ -33,7 +33,7 @@ public class ClientServiceImpl implements ClientService {
                         .build())
                 .preferences(ClientResponse.Preferences.builder()
                         .language(client.getPreferredLanguage())
-                        .lastAccess(client.getLastAccess())
+                        .lastAccess(client.getPreviousAccess())
                         .build())
                 .auditInfo(ClientResponse.AuditInfo.builder()
                         .createdAt(client.getCreatedAt())

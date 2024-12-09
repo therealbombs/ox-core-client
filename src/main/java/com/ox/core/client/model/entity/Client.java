@@ -40,6 +40,18 @@ public class Client {
     @Column(name = "last_access")
     private LocalDateTime lastAccess;
 
+    @Column(name = "previous_access")
+    private LocalDateTime previousAccess;
+
+    @Column(name = "failed_attempts")
+    private Integer failedAttempts;
+
+    @Column(name = "locked_until")
+    private LocalDateTime lockedUntil;
+
+    @Column(name = "password")
+    private String password;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

@@ -11,4 +11,6 @@ public class AuthenticationResponse {
     private String clientId;
     private String abi;
     private String token;
+    private Integer remainingAttempts;
+    private LocalDateTime lockedUntil;
 }

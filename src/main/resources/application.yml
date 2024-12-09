@@ -50,5 +50,9 @@ logging:
 
 security:
   jwt:
-    secret: bXktc2VjcmV0LWtleS1mb3Itand0LXRva2VuLWdlbmVyYXRpb24tc2hvdWxkLWJlLWF0LWxlYXN0LTI1Ni1iaXRz
-    expiration: 86400000 # 24 hours in milliseconds
+    secret: ${JWT_SECRET:your-secret-key}
+    expiration: ${JWT_EXPIRATION:86400}
+  password:
+    pattern: ^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\S+$).{8,}$
+    max-attempts: 3
+    lock-duration-minutes: 30
