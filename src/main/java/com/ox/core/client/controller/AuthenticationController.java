@@ -14,15 +14,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/v1/auth")
+@Tag(name = "Authentication", description = "Authentication endpoints")
 @RequiredArgsConstructor
-@Tag(name = "Authentication", description = "Authentication API")
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
 
     @PostMapping("/login")
-    @Operation(summary = "Authenticate user", description = "Authenticate user with username and password")
+    @Operation(summary = "Authenticate client", description = "Authenticate client with credentials")
     public ResponseEntity<AuthenticationResponse> authenticate(
             @Valid @RequestBody AuthenticationRequest request
     ) {
