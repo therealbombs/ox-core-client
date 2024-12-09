@@ -42,5 +42,5 @@ logging:
 
 security:
   jwt:
-    secret: your-256-bit-secret-key-here
+    secret: bXktc2VjcmV0LWtleS1mb3Itand0LXRva2VuLWdlbmVyYXRpb24tc2hvdWxkLWJlLWF0LWxlYXN0LTI1Ni1iaXRz
     expiration: 86400000 # 24 hours in milliseconds
