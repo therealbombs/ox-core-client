@@ -22,11 +22,15 @@ spring:
       enabled: true
       path: /h2-console
 
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    baseline-version: 0
+
   sql:
     init:
-      mode: always
-      schema-locations: classpath:schema.sql
-      data-locations: classpath:data.sql
+      mode: never
 
 server:
   port: 8080
@@ -47,6 +51,7 @@ logging:
     org.hibernate: INFO
     org.springframework.security: DEBUG
     org.springframework.web: DEBUG
+    org.flywaydb: DEBUG
 
 security:
   jwt:
