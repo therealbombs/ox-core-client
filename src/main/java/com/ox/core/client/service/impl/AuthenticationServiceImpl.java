@@ -47,6 +47,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .clientId(client.getClientId())
                     .lockedUntil(client.getLockedUntil())
                     .remainingAttempts(0)
+                    .passwordChangeRequired(client.getPasswordChangeRequired())
                     .build();
         }
 
@@ -82,6 +83,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .abi(client.getAbi())
                 .token(token)
                 .remainingAttempts(securityProperties.getPassword().getMaxAttempts())
+                .passwordChangeRequired(client.getPasswordChangeRequired())
                 .build();
     }
 
@@ -116,6 +118,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .clientId(client.getClientId())
                 .remainingAttempts(remainingAttempts)
                 .lockedUntil(client.getLockedUntil())
+                .passwordChangeRequired(client.getPasswordChangeRequired())
                 .build();
     }
 }

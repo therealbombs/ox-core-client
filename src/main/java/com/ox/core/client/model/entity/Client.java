@@ -52,6 +52,9 @@ public class Client {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "password_change_required")
+    private Boolean passwordChangeRequired;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

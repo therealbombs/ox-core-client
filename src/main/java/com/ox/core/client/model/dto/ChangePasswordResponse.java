@@ -7,10 +7,8 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
-public class AuthenticationResponse {
-    private String clientId;
-    private String abi;
-    private String token;
+public class ChangePasswordResponse {
+    private String message;
     private Integer remainingAttempts;
     private LocalDateTime lockedUntil;
     private Boolean passwordChangeRequired;
