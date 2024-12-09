@@ -1,7 +1,6 @@
 package com.ox.core.client.service.impl;
 
 import com.ox.core.client.config.SecurityProperties;
-import com.ox.core.client.exception.InvalidPasswordException;
 import com.ox.core.client.exception.ResourceNotFoundException;
 import com.ox.core.client.model.dto.ChangePasswordRequest;
 import com.ox.core.client.model.dto.ChangePasswordResponse;
@@ -10,6 +9,8 @@ import com.ox.core.client.repository.ClientRepository;
 import com.ox.core.client.service.PasswordService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
