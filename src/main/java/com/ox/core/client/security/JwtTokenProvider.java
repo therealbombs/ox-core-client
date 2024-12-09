@@ -3,16 +3,17 @@ package com.ox.core.client.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Base64;
+import java.util.function.Function;
 
 @Slf4j
 @Component
@@ -27,11 +28,11 @@ public class JwtTokenProvider {
     private Key getSigningKey() {
         try {
             log.debug("Generating signing key");
-            byte[] apiKeySecretBytes = Base64.getDecoder().decode(secretKey);
-            return new SecretKeySpec(apiKeySecretBytes, SignatureAlgorithm.HS256.getJcaName());
+            byte[] keyBytes = Base64.getDecoder().decode(secretKey);
+            return Keys.hmacShaKeyFor(keyBytes);
         } catch (Exception e) {
             log.error("Error generating signing key: {}", e.getMessage());
-            throw e;
+            throw new RuntimeException("Error generating JWT signing key", e);
         }
     }
 
@@ -44,9 +45,9 @@ public class JwtTokenProvider {
             String token = Jwts.builder()
                     .setClaims(claims)
                     .setSubject(clientId)
-                    .setIssuedAt(new Date(System.currentTimeMillis()))
+                    .setIssuedAt(new Date())
                     .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
-                    .signWith(SignatureAlgorithm.HS256, getSigningKey())
+                    .signWith(getSigningKey())
                     .compact();
             
             log.debug("Token generated successfully");
@@ -65,7 +66,7 @@ public class JwtTokenProvider {
             return clientId;
         } catch (Exception e) {
             log.error("Error extracting clientId from token: {}", e.getMessage());
-            throw e;
+            throw new RuntimeException("Error extracting clientId from JWT token", e);
         }
     }
 
@@ -77,25 +78,26 @@ public class JwtTokenProvider {
             return abi;
         } catch (Exception e) {
             log.error("Error extracting ABI from token: {}", e.getMessage());
-            throw e;
+            throw new RuntimeException("Error extracting ABI from JWT token", e);
         }
     }
 
-    private <T> T extractClaim(String token, java.util.function.Function<Claims, T> claimsResolver) {
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         try {
             final Claims claims = extractAllClaims(token);
             return claimsResolver.apply(claims);
         } catch (Exception e) {
             log.error("Error extracting claim from token: {}", e.getMessage());
-            throw e;
+            throw new RuntimeException("Error extracting claim from JWT token", e);
         }
     }
 
     private Claims extractAllClaims(String token) {
         try {
             log.debug("Extracting all claims from token");
-            Claims claims = Jwts.parser()
+            Claims claims = Jwts.parserBuilder()
                     .setSigningKey(getSigningKey())
+                    .build()
                     .parseClaimsJws(token)
                     .getBody();
             log.debug("Successfully extracted claims from token");
@@ -108,7 +110,6 @@ public class JwtTokenProvider {
 
     public boolean isTokenValid(String token) {
         try {
-            log.debug("Validating token");
             return !isTokenExpired(token);
         } catch (Exception e) {
             log.error("Error validating token: {}", e.getMessage());
