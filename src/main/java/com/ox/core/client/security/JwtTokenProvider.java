@@ -46,14 +46,14 @@ public class JwtTokenProvider {
                     .setSubject(clientId)
                     .setIssuedAt(new Date(System.currentTimeMillis()))
                     .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
-                    .signWith(SignatureAlgorithm.HS256, secretKey)
+                    .signWith(SignatureAlgorithm.HS256, getSigningKey())
                     .compact();
             
-            log.debug("Successfully generated token for client: {}", clientId);
+            log.debug("Token generated successfully");
             return token;
         } catch (Exception e) {
             log.error("Error generating token: {}", e.getMessage());
-            throw e;
+            throw new RuntimeException("Error generating JWT token", e);
         }
     }
 
@@ -95,14 +95,14 @@ public class JwtTokenProvider {
         try {
             log.debug("Extracting all claims from token");
             Claims claims = Jwts.parser()
-                    .setSigningKey(secretKey)
+                    .setSigningKey(getSigningKey())
                     .parseClaimsJws(token)
                     .getBody();
             log.debug("Successfully extracted claims from token");
             return claims;
         } catch (Exception e) {
             log.error("Error extracting claims from token: {}", e.getMessage());
-            throw e;
+            throw new RuntimeException("Error extracting claims from JWT token", e);
         }
     }
 
