@@ -1,0 +1,228 @@
+{
+	"info": {
+		"_postman_id": "e9b3c8a0-5f1d-4b2e-8f1a-9b9b9b9b9b9b",
+		"name": "OX Core Client API",
+		"description": "Collection for testing OX Core Client microservice APIs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080/api/v1",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"if (jsonData.token) {",
+									"    pm.collectionVariables.set(\"token\", jsonData.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"test@example.com\",\n    \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						},
+						"description": "Authenticate user and get JWT token"
+					},
+					"response": [
+						{
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\": \"test@example.com\",\n    \"password\": \"password123\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/auth/login",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"clientId\": \"C001\",\n    \"abi\": \"01234\",\n    \"token\": \"eyJhbGciOiJIUzI1NiJ9...\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Clients",
+			"item": [
+				{
+					"name": "Get Client Details",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/banks/01234/clients/C001",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"banks",
+								"01234",
+								"clients",
+								"C001"
+							]
+						},
+						"description": "Get client details by ABI and client ID"
+					},
+					"response": [
+						{
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/banks/01234/clients/C001",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"banks",
+										"01234",
+										"clients",
+										"C001"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"clientId\": \"C001\",\n    \"abi\": \"01234\",\n    \"personalInfo\": {\n        \"name\": \"Mario\",\n        \"surname\": \"Rossi\",\n        \"fiscalCode\": \"RSSMRA80A01H501A\"\n    },\n    \"preferences\": {\n        \"language\": \"it\",\n        \"lastAccess\": \"2024-12-09T21:48:38\"\n    }\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Accounts",
+			"item": [
+				{
+					"name": "Get Client Accounts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/banks/01234/clients/C001/accounts",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"banks",
+								"01234",
+								"clients",
+								"C001",
+								"accounts"
+							]
+						},
+						"description": "Get all accounts for a client"
+					},
+					"response": [
+						{
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/banks/01234/clients/C001/accounts",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"banks",
+										"01234",
+										"clients",
+										"C001",
+										"accounts"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"accounts\": [\n        {\n            \"accountId\": \"A001\",\n            \"accountType\": \"CURRENT_ACCOUNT\",\n            \"accountNumber\": \"CA001\",\n            \"status\": \"ACTIVE\",\n            \"iban\": \"IT01234000000CA001\",\n            \"holders\": [\n                {\n                    \"clientId\": \"C001\",\n                    \"holderType\": \"PRIMARY\",\n                    \"name\": \"Mario\",\n                    \"surname\": \"Rossi\"\n                }\n            ]\n        },\n        {\n            \"accountId\": \"A002\",\n            \"accountType\": \"DEPOSIT_ACCOUNT\",\n            \"accountNumber\": \"DA001\",\n            \"status\": \"ACTIVE\",\n            \"iban\": \"IT01234000000DA001\",\n            \"holders\": [\n                {\n                    \"clientId\": \"C001\",\n                    \"holderType\": \"PRIMARY\",\n                    \"name\": \"Mario\",\n                    \"surname\": \"Rossi\"\n                }\n            ]\n        }\n    ]\n}"
+						}
+					]
+				}
+			]
+		}
+	]
+}
