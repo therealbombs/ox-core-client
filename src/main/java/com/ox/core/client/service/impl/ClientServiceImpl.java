@@ -35,6 +35,10 @@ public class ClientServiceImpl implements ClientService {
                         .language(client.getPreferredLanguage())
                         .lastAccess(client.getLastAccess())
                         .build())
+                .auditInfo(ClientResponse.AuditInfo.builder()
+                        .createdAt(client.getCreatedAt())
+                        .modifiedAt(client.getModifiedAt())
+                        .build())
                 .build();
     }
 

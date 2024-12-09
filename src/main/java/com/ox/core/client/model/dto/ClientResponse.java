@@ -12,6 +12,7 @@ public class ClientResponse {
     private String abi;
     private PersonalInfo personalInfo;
     private Preferences preferences;
+    private AuditInfo auditInfo;
 
     @Data
     @Builder
@@ -26,5 +27,12 @@ public class ClientResponse {
     public static class Preferences {
         private String language;
         private LocalDateTime lastAccess;
+    }
+
+    @Data
+    @Builder
+    public static class AuditInfo {
+        private LocalDateTime createdAt;
+        private LocalDateTime modifiedAt;
     }
 }

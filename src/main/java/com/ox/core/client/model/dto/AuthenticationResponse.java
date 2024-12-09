@@ -3,6 +3,8 @@ package com.ox.core.client.model.dto;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 public class AuthenticationResponse {
