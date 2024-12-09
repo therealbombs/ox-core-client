@@ -39,6 +39,8 @@ logging:
     com.ox.core.client: DEBUG
     org.springframework: INFO
     org.hibernate: INFO
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
 
 security:
   jwt:
