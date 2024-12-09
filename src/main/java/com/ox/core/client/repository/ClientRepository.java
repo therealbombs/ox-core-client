@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface ClientRepository extends JpaRepository<Client, String> {
     Optional<Client> findByAbiAndClientId(String abi, String clientId);
     Optional<Client> findByFiscalCode(String fiscalCode);
+    boolean existsByClientId(String clientId);
 }

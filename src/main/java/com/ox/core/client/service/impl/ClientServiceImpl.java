@@ -6,9 +6,11 @@ import com.ox.core.client.model.entity.Client;
 import com.ox.core.client.repository.ClientRepository;
 import com.ox.core.client.service.ClientService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ClientServiceImpl implements ClientService {
@@ -34,5 +36,14 @@ public class ClientServiceImpl implements ClientService {
                         .lastAccess(client.getLastAccess())
                         .build())
                 .build();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean validateClient(String clientId) {
+        log.debug("Validating client with ID: {}", clientId);
+        boolean exists = clientRepository.existsByClientId(clientId);
+        log.debug("Client validation result for ID {}: {}", clientId, exists);
+        return exists;
     }
 }
