@@ -1,0 +1,35 @@
+CREATE TABLE IF NOT EXISTS CLIENT (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    client_id VARCHAR(255) NOT NULL UNIQUE,
+    abi VARCHAR(5) NOT NULL,
+    fiscal_code VARCHAR(16) NOT NULL UNIQUE,
+    name VARCHAR(255) NOT NULL,
+    surname VARCHAR(255) NOT NULL,
+    preferred_language VARCHAR(2),
+    last_access TIMESTAMP,
+    created_at TIMESTAMP NOT NULL,
+    modified_at TIMESTAMP NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS ACCOUNT (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    account_id VARCHAR(255) NOT NULL UNIQUE,
+    abi VARCHAR(5) NOT NULL,
+    account_type VARCHAR(50) NOT NULL,
+    account_number VARCHAR(255) NOT NULL,
+    status VARCHAR(20) NOT NULL,
+    iban VARCHAR(34) NOT NULL UNIQUE,
+    created_at TIMESTAMP NOT NULL,
+    modified_at TIMESTAMP NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS ACCOUNT_HOLDER (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    holder_id VARCHAR(255) NOT NULL UNIQUE,
+    account_id VARCHAR(255) NOT NULL,
+    client_id VARCHAR(255) NOT NULL,
+    holder_type VARCHAR(20) NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    FOREIGN KEY (account_id) REFERENCES ACCOUNT(account_id),
+    FOREIGN KEY (client_id) REFERENCES CLIENT(client_id)
+);
