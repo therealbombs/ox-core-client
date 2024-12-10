@@ -17,4 +17,5 @@ public class OxCoreClientApplication {
     public static void main(String[] args) {
         SpringApplication.run(OxCoreClientApplication.class, args);
     }
+    
 }
