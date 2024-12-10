@@ -36,6 +36,12 @@ public class AuthenticationResponse {
     private String token;
 
     @Schema(
+        description = "Token expiration time in seconds",
+        example = "3600"
+    )
+    private Long expiresIn;
+
+    @Schema(
         description = "Number of login attempts remaining before account lockout",
         example = "2",
         minimum = "0",
