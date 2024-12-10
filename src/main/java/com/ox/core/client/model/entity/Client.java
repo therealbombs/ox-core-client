@@ -52,10 +52,6 @@ public class Client {
     @Column(name = "password")
     private String password;
 
-    // TODO: SECURITY RISK - Remove this field. Storing clear text passwords is a severe security vulnerability
-    @Transient  // This field won't be persisted to the database
-    private String clearPassword;
-
     @Column(name = "password_change_required")
     private Boolean passwordChangeRequired;
 

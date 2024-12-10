@@ -1,20 +1,32 @@
 package com.ox.core.client.service;
 
 import com.ox.core.client.model.dto.ClientResponse;
-import com.ox.core.client.model.dto.InquiryRequest;
-import com.ox.core.client.model.dto.InquiryResponse;
 
 public interface ClientService {
-    ClientResponse getClientDetails(String abi, String clientId);
-    boolean existsByClientId(String clientId);
-    boolean validateClient(String clientId);
-    
+
     /**
-     * Inquire about a client using their fiscal code and bank ABI.
-     * This method is used to find client information without requiring authentication.
+     * Get detailed client information by ABI and client ID.
      *
-     * @param request The inquiry request containing ABI and fiscal code
-     * @return Client inquiry response with basic client information
+     * @param abi Bank ABI code
+     * @param clientId Client identifier
+     * @return Client details response
      */
-    InquiryResponse inquireClient(InquiryRequest request);
+    ClientResponse getClientDetails(String abi, String clientId);
+
+    /**
+     * Check if a client exists by their client ID.
+     *
+     * @param clientId Client identifier
+     * @return true if client exists, false otherwise
+     */
+    boolean existsByClientId(String clientId);
+
+    /**
+     * Validate a client by their client ID.
+     * This is used during authentication to verify the client exists and is valid.
+     *
+     * @param clientId Client identifier
+     * @return true if client is valid, false otherwise
+     */
+    boolean validateClient(String clientId);
 }

@@ -21,12 +21,12 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"clientId\": \"{{clientId}}\",\n    \"abi\": \"{{abi}}\",\n    \"password\": \"{{password}}\"\n}"
+                            "raw": "{\n    \"clientId\": \"C001\",\n    \"abi\": \"01234\",\n    \"password\": \"password\"\n}"
                         },
                         "url": {
-                            "raw": "{{baseUrl}}/auth/login",
-                            "host": ["{{baseUrl}}"],
-                            "path": ["auth", "login"]
+                            "raw": "http://localhost:8080/api/v1/auth/login",
+                            "host": ["http://localhost:8080"],
+                            "path": ["api", "v1", "auth", "login"]
                         },
                         "description": "Login with valid credentials"
                     }
@@ -43,12 +43,12 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"clientId\": \"{{clientId}}\",\n    \"abi\": \"{{abi}}\",\n    \"password\": \"{{invalidPassword}}\"\n}"
+                            "raw": "{\n    \"clientId\": \"C001\",\n    \"abi\": \"01234\",\n    \"password\": \"wrongpassword\"\n}"
                         },
                         "url": {
-                            "raw": "{{baseUrl}}/auth/login",
-                            "host": ["{{baseUrl}}"],
-                            "path": ["auth", "login"]
+                            "raw": "http://localhost:8080/api/v1/auth/login",
+                            "host": ["http://localhost:8080"],
+                            "path": ["api", "v1", "auth", "login"]
                         },
                         "description": "Test failed login attempt"
                     }
@@ -65,131 +65,15 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"clientId\": \"{{clientId}}\",\n    \"abi\": \"{{abi}}\",\n    \"password\": \"{{password}}\"\n}"
+                            "raw": "{\n    \"clientId\": \"C001\",\n    \"abi\": \"01234\",\n    \"password\": \"password\"\n}"
                         },
                         "url": {
-                            "raw": "{{baseUrl}}/auth/unlock",
-                            "host": ["{{baseUrl}}"],
-                            "path": ["auth", "unlock"]
+                            "raw": "http://localhost:8080/api/v1/auth/unlock",
+                            "host": ["http://localhost:8080"],
+                            "path": ["api", "v1", "auth", "unlock"]
                         },
                         "description": "Unlock a locked account"
                     }
-                }
-            ]
-        },
-        {
-            "name": "Client Inquiries",
-            "description": "Client inquiry operations",
-            "item": [
-                {
-                    "name": "Inquire Client - Success",
-                    "request": {
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\n    \"abi\": \"{{abi}}\",\n    \"fiscalCode\": \"RSSMRA80A01H501A\"\n}"
-                        },
-                        "url": {
-                            "raw": "{{baseUrl}}/clients/inquiries",
-                            "host": ["{{baseUrl}}"],
-                            "path": ["clients", "inquiries"]
-                        },
-                        "description": "Inquire about a client using fiscal code"
-                    },
-                    "response": [
-                        {
-                            "name": "Success Response",
-                            "originalRequest": {
-                                "method": "POST",
-                                "header": [
-                                    {
-                                        "key": "Content-Type",
-                                        "value": "application/json"
-                                    }
-                                ],
-                                "body": {
-                                    "mode": "raw",
-                                    "raw": "{\n    \"abi\": \"01234\",\n    \"fiscalCode\": \"RSSMRA80A01H501A\"\n}"
-                                },
-                                "url": {
-                                    "raw": "{{baseUrl}}/clients/inquiries",
-                                    "host": ["{{baseUrl}}"],
-                                    "path": ["clients", "inquiries"]
-                                }
-                            },
-                            "status": "OK",
-                            "code": 200,
-                            "_postman_previewlanguage": "json",
-                            "header": [
-                                {
-                                    "key": "Content-Type",
-                                    "value": "application/json"
-                                }
-                            ],
-                            "body": "{\n    \"clientId\": \"C001\",\n    \"abi\": \"01234\",\n    \"fullName\": \"Mario Rossi\",\n    \"fiscalCode\": \"RSSMRA80A01H501A\",\n    \"clientExists\": true,\n    \"numberOfAccounts\": 2\n}"
-                        }
-                    ]
-                },
-                {
-                    "name": "Inquire Client - Not Found",
-                    "request": {
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\n    \"abi\": \"99999\",\n    \"fiscalCode\": \"AAABBB80A01H501Z\"\n}"
-                        },
-                        "url": {
-                            "raw": "{{baseUrl}}/clients/inquiries",
-                            "host": ["{{baseUrl}}"],
-                            "path": ["clients", "inquiries"]
-                        },
-                        "description": "Inquire about a non-existent client"
-                    },
-                    "response": [
-                        {
-                            "name": "Not Found Response",
-                            "originalRequest": {
-                                "method": "POST",
-                                "header": [
-                                    {
-                                        "key": "Content-Type",
-                                        "value": "application/json"
-                                    }
-                                ],
-                                "body": {
-                                    "mode": "raw",
-                                    "raw": "{\n    \"abi\": \"99999\",\n    \"fiscalCode\": \"AAABBB80A01H501Z\"\n}"
-                                },
-                                "url": {
-                                    "raw": "{{baseUrl}}/clients/inquiries",
-                                    "host": ["{{baseUrl}}"],
-                                    "path": ["clients", "inquiries"]
-                                }
-                            },
-                            "status": "OK",
-                            "code": 200,
-                            "_postman_previewlanguage": "json",
-                            "header": [
-                                {
-                                    "key": "Content-Type",
-                                    "value": "application/json"
-                                }
-                            ],
-                            "body": "{\n    \"abi\": \"99999\",\n    \"fiscalCode\": \"AAABBB80A01H501Z\",\n    \"clientExists\": false,\n    \"numberOfAccounts\": 0\n}"
-                        }
-                    ]
                 }
             ]
         },
@@ -208,19 +92,43 @@
                             },
                             {
                                 "key": "Authorization",
-                                "value": "Bearer {{token}}"
+                                "value": "Bearer eyJhbGciOiJIUzI1NiJ9..."
                             }
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"clientId\": \"{{clientId}}\",\n    \"abi\": \"{{abi}}\",\n    \"currentPassword\": \"{{password}}\",\n    \"newPassword\": \"{{newPassword}}\"\n}"
+                            "raw": "{\n    \"currentPassword\": \"password\",\n    \"newPassword\": \"NewPassword123!\",\n    \"confirmPassword\": \"NewPassword123!\"\n}"
                         },
                         "url": {
-                            "raw": "{{baseUrl}}/auth/password/change",
-                            "host": ["{{baseUrl}}"],
-                            "path": ["auth", "password", "change"]
+                            "raw": "http://localhost:8080/api/v1/password/change",
+                            "host": ["http://localhost:8080"],
+                            "path": ["api", "v1", "password", "change"]
                         },
-                        "description": "Change client's password"
+                        "description": "Change user password"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Client Information",
+            "description": "Client information related endpoints",
+            "item": [
+                {
+                    "name": "Get Client Details",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer eyJhbGciOiJIUzI1NiJ9..."
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://localhost:8080/api/v1/clients/01234/C001",
+                            "host": ["http://localhost:8080"],
+                            "path": ["api", "v1", "clients", "01234", "C001"]
+                        },
+                        "description": "Get detailed client information"
                     }
                 }
             ]

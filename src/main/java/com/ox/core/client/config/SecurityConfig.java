@@ -32,7 +32,6 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> {
                 auth.requestMatchers(
                     new AntPathRequestMatcher("/auth/**"),
-                    new AntPathRequestMatcher("/clients/inquiries/**"),
                     new AntPathRequestMatcher("/swagger-ui/**"),
                     new AntPathRequestMatcher("/swagger-ui.html"),
                     new AntPathRequestMatcher("/v3/api-docs/**"),
