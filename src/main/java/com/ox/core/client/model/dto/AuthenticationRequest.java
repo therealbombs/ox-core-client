@@ -1,17 +1,21 @@
 package com.ox.core.client.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(description = "Request object for client authentication")
+@ToString(exclude = "password")
 public class AuthenticationRequest {
 
     @NotBlank(message = "Client ID is required")
@@ -36,5 +40,7 @@ public class AuthenticationRequest {
         example = "Password123!",
         requiredMode = Schema.RequiredMode.REQUIRED
     )
+    @JsonProperty(access = Access.WRITE_ONLY)
+    @ToString.Exclude
     private String password;
 }

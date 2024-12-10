@@ -30,19 +30,30 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
+        log.info("Authentication attempt for clientId: {}, abi: {}", request.getClientId(), request.getAbi());
         try {
+            log.debug("Searching for client with abi: {} and clientId: {}", request.getAbi(), request.getClientId());
             var client = clientRepository.findByAbiAndClientId(request.getAbi(), request.getClientId())
-                    .orElseThrow(() -> new BadCredentialsException("Invalid credentials"));
+                    .orElseThrow(() -> {
+                        log.warn("Client not found with abi: {} and clientId: {}", request.getAbi(), request.getClientId());
+                        return new BadCredentialsException("Invalid credentials");
+                    });
 
+            log.debug("Client found. Checking lock status. Locked until: {}, Failed attempts: {}", 
+                     client.getLockedUntil(), client.getFailedAttempts());
             if (isAccountLocked(client)) {
+                log.warn("Account is locked for client: {} until: {}", client.getClientId(), client.getLockedUntil());
                 throw new LockedException("Account is locked");
             }
 
+            log.debug("Validating password for client: {}", client.getClientId());
             if (!passwordEncoder.matches(request.getPassword(), client.getPassword())) {
+                log.warn("Invalid password attempt for client: {}", client.getClientId());
                 handleFailedAttempt(client, "Invalid credentials");
                 throw new BadCredentialsException("Invalid credentials");
             }
 
+            log.info("Authentication successful for client: {}", client.getClientId());
             // Reset failed attempts on successful login
             if (client.getFailedAttempts() > 0) {
                 client.setFailedAttempts(0);
@@ -57,32 +68,39 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             clientRepository.save(client);
 
             String token = jwtTokenProvider.generateToken(client.getClientId(), client.getAbi());
-            
+            log.debug("Generated JWT token for client: {}", client.getClientId());
             return AuthenticationResponse.builder()
                     .token(token)
                     .build();
 
         } catch (BadCredentialsException | LockedException e) {
+            log.error("Authentication failed: {}", e.getMessage());
             throw e;
         } catch (Exception e) {
-            log.error("Authentication error", e);
+            log.error("Unexpected error during authentication", e);
             throw new BadCredentialsException("Authentication failed");
         }
     }
 
     @Transactional
     public AuthenticationResponse unlockAccount(AuthenticationRequest request) {
+        log.info("Unlock account attempt for clientId: {}, abi: {}", request.getClientId(), request.getAbi());
         Client client = clientRepository.findByAbiAndClientId(request.getAbi(), request.getClientId())
                 .orElseThrow(() -> new BadCredentialsException("Invalid credentials"));
 
+        log.debug("Client found. Checking lock status. Locked until: {}, Failed attempts: {}", 
+                 client.getLockedUntil(), client.getFailedAttempts());
         // Check if account is actually locked
         if (client.getLockedUntil() == null) {
+            log.info("Account is not locked for client: {}", client.getClientId());
             // Account is not locked, proceed with normal authentication
             return authenticate(request);
         }
 
+        log.debug("Account is locked for client: {} until: {}", client.getClientId(), client.getLockedUntil());
         // Check if lock duration has expired
         if (client.getLockedUntil().isAfter(LocalDateTime.now())) {
+            log.warn("Account is still locked for client: {} until: {}", client.getClientId(), client.getLockedUntil());
             // Account is still locked
             return AuthenticationResponse.builder()
                     .clientId(client.getClientId())
@@ -93,8 +111,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .build();
         }
 
+        log.info("Lock duration has expired for client: {}", client.getClientId());
         // Verify credentials
         if (!passwordEncoder.matches(request.getPassword(), client.getPassword())) {
+            log.warn("Invalid password attempt for client: {}", client.getClientId());
             // Invalid credentials, keep account locked
             return AuthenticationResponse.builder()
                     .clientId(client.getClientId())
@@ -105,15 +125,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .build();
         }
 
+        log.info("Credentials are valid for client: {}", client.getClientId());
         // Reset failed attempts and unlock account
         client.setFailedAttempts(0);
         client.setLockedUntil(null);
         clientRepository.save(client);
 
+        log.info("Account unlocked successfully for client: {}", client.getClientId());
         // Generate token and return successful response
         String token = jwtTokenProvider.generateToken(client.getClientId(), client.getAbi());
-        log.info("Account unlocked successfully for client: {}", client.getClientId());
-
+        log.debug("Generated JWT token for client: {}", client.getClientId());
         return AuthenticationResponse.builder()
                 .clientId(client.getClientId())
                 .abi(client.getAbi())
@@ -124,15 +145,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     private boolean isAccountLocked(Client client) {
+        log.debug("Checking if account is locked for client: {}", client.getClientId());
         return client.getLockedUntil() != null && 
                LocalDateTime.now().isBefore(client.getLockedUntil());
     }
 
     private boolean isPasswordValid(String password) {
+        log.debug("Checking if password is valid: {}", password);
         return Pattern.matches(securityProperties.getPassword().getPattern(), password);
     }
 
     private AuthenticationResponse handleFailedAttempt(Client client, String message) {
+        log.info("Handling failed attempt for client: {}", client.getClientId());
         int failedAttempts = client.getFailedAttempts() == null ? 0 : client.getFailedAttempts();
         failedAttempts++;
         client.setFailedAttempts(failedAttempts);
