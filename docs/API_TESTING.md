@@ -26,18 +26,27 @@ The collection uses the sample data provided in `data.sql`, which includes:
 1. Mario Rossi (C001)
    - ABI: 01234
    - Fiscal Code: RSSMRA80A01H501A
+   - Password: Password123!
 2. Luigi Verdi (C002)
    - ABI: 01234
    - Fiscal Code: VRDLGU85M15H501B
+   - Password: Password123!
 3. Giovanna Bianchi (C003)
    - ABI: 56789
    - Fiscal Code: BNCGNN90D45H501C
+   - Password: Password123!
+4. Francesco Rossi (C004)
+   - ABI: 90123
+   - Fiscal Code: RSSMRA80A01H501D
+   - Password: Password123!
 
 ### Test Scenarios
 
 1. Authentication
    - Login with valid credentials
-   - Login with invalid credentials
+   - Login with invalid credentials (tracks failed attempts)
+   - Account lockout after multiple failed attempts
+   - Account unlock with correct credentials
    - Access protected endpoints without token
    - Access protected endpoints with invalid token
 
@@ -60,6 +69,7 @@ The collection uses the sample data provided in `data.sql`, which includes:
 
    a. Authentication:
       - POST /auth/login (saves token automatically)
+      - POST /auth/unlock (if account is locked)
    
    b. Client Operations:
       - GET /banks/{abi}/clients/{clientId}
@@ -74,7 +84,32 @@ The collection uses the sample data provided in `data.sql`, which includes:
 {
     "clientId": "C001",
     "abi": "01234",
-    "token": "eyJhbGciOiJIUzI1NiJ9..."
+    "token": "eyJhbGciOiJIUzI1NiJ9...",
+    "expiresIn": 3600,
+    "remainingAttempts": 3,
+    "passwordChangeRequired": false
+}
+```
+
+### Failed Login Response (401 Unauthorized)
+```json
+{
+    "clientId": "C001",
+    "abi": "01234",
+    "remainingAttempts": 2,
+    "passwordChangeRequired": false,
+    "lockedUntil": null
+}
+```
+
+### Account Locked Response (423 Locked)
+```json
+{
+    "clientId": "C001",
+    "abi": "01234",
+    "remainingAttempts": 0,
+    "passwordChangeRequired": false,
+    "lockedUntil": "2024-12-10T12:00:00"
 }
 ```
 
@@ -120,6 +155,17 @@ The collection uses the sample data provided in `data.sql`, which includes:
 
 ## Error Responses
 
+### 400 Bad Request
+```json
+{
+    "timestamp": "2024-12-10T11:01:26+01:00",
+    "status": 400,
+    "error": "Bad Request",
+    "message": "Invalid request format",
+    "path": "/auth/login"
+}
+```
+
 ### 401 Unauthorized
 ```json
 {
@@ -143,14 +189,19 @@ The collection uses the sample data provided in `data.sql`, which includes:
 1. If you get a 401 error, ensure:
    - You've executed the login request first
    - The token is being correctly set in the environment
-   - The token hasn't expired
+   - The token hasn't expired (default expiration is 1 hour)
 
 2. If you get a 404 error, verify:
    - The ABI and client ID match the test data
    - The application has started correctly
    - The database has been initialized with the test data
 
-3. For connection errors:
+3. If your account gets locked:
+   - Wait for the lock duration to expire (default 15 minutes)
+   - Use the /auth/unlock endpoint with correct credentials to unlock
+   - Reset the application to clear all locks
+
+4. For connection errors:
    - Verify the application is running
    - Check the baseUrl in the environment matches your application configuration
    - Ensure no firewall is blocking the connection
