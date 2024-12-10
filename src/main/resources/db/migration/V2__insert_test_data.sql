@@ -1,8 +1,8 @@
 -- Insert test clients
 INSERT INTO client (client_id, abi, password, fiscal_code, name, surname, preferred_language, failed_attempts, password_change_required, created_at, modified_at)
 VALUES 
-('12345678', '01234', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEXLEQ6VH5T9FZEt3M4xnxw77AY6', 'RSSMRA80A01H501U', 'Mario', 'Rossi', 'IT', 0, false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-('87654321', '01234', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEXLEQ6VH5T9FZEt3M4xnxw77AY6', 'VRDGSP85A01H501V', 'Giuseppe', 'Verdi', 'IT', 0, false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+('12345678', '01234', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'RSSMRA80A01H501U', 'Mario', 'Rossi', 'IT', 0, false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('87654321', '01234', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'VRDGSP85A01H501V', 'Giuseppe', 'Verdi', 'IT', 0, false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 -- Insert test accounts
 INSERT INTO account (account_id, abi, account_type, account_number, status, iban, created_at, modified_at)
