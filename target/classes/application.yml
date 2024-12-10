@@ -3,7 +3,7 @@ spring:
     name: ox-core-client
   
   datasource:
-    url: jdbc:h2:mem:oxcoredb;DB_CLOSE_DELAY=-1;MODE=MySQL
+    url: jdbc:h2:mem:oxcoredb;DB_CLOSE_ON_EXIT=FALSE;MODE=MySQL
     username: SA
     password: 
     driver-class-name: org.h2.Driver
@@ -11,7 +11,7 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
-      ddl-auto: none
+      ddl-auto: validate
     show-sql: true
     properties:
       hibernate:
@@ -27,6 +27,7 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: true
     baseline-version: 0
+    clean-on-validation-error: true
 
   sql:
     init:
@@ -54,10 +55,12 @@ logging:
     org.flywaydb: DEBUG
 
 security:
-  jwt:
-    secret: ${JWT_SECRET:your-secret-key}
-    expiration: ${JWT_EXPIRATION:86400}
   password:
     pattern: ^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\S+$).{8,}$
     max-attempts: 3
     lock-duration-minutes: 30
+  jwt:
+    secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+    expiration: 86400000 # a day
+    refresh-token:
+      expiration: 604800000 # 7 days
