@@ -31,7 +31,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         try {
-            var client = clientRepository.findByClientIdAndAbi(request.getClientId(), request.getAbi())
+            var client = clientRepository.findByAbiAndClientId(request.getAbi(), request.getClientId())
                     .orElseThrow(() -> new BadCredentialsException("Invalid credentials"));
 
             if (isAccountLocked(client)) {
@@ -72,7 +72,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Transactional
     public AuthenticationResponse unlockAccount(AuthenticationRequest request) {
-        Client client = clientRepository.findByClientIdAndAbi(request.getClientId(), request.getAbi())
+        Client client = clientRepository.findByAbiAndClientId(request.getAbi(), request.getClientId())
                 .orElseThrow(() -> new BadCredentialsException("Invalid credentials"));
 
         // Check if account is actually locked
