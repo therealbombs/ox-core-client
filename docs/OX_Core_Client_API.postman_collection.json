@@ -78,6 +78,122 @@
             ]
         },
         {
+            "name": "Client Inquiries",
+            "description": "Client inquiry operations",
+            "item": [
+                {
+                    "name": "Inquire Client - Success",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"abi\": \"{{abi}}\",\n    \"fiscalCode\": \"RSSMRA80A01H501A\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/clients/inquiries",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["clients", "inquiries"]
+                        },
+                        "description": "Inquire about a client using fiscal code"
+                    },
+                    "response": [
+                        {
+                            "name": "Success Response",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"abi\": \"01234\",\n    \"fiscalCode\": \"RSSMRA80A01H501A\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{baseUrl}}/clients/inquiries",
+                                    "host": ["{{baseUrl}}"],
+                                    "path": ["clients", "inquiries"]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "body": "{\n    \"clientId\": \"C001\",\n    \"abi\": \"01234\",\n    \"fullName\": \"Mario Rossi\",\n    \"fiscalCode\": \"RSSMRA80A01H501A\",\n    \"clientExists\": true,\n    \"numberOfAccounts\": 2\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Inquire Client - Not Found",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"abi\": \"99999\",\n    \"fiscalCode\": \"AAABBB80A01H501Z\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/clients/inquiries",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["clients", "inquiries"]
+                        },
+                        "description": "Inquire about a non-existent client"
+                    },
+                    "response": [
+                        {
+                            "name": "Not Found Response",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"abi\": \"99999\",\n    \"fiscalCode\": \"AAABBB80A01H501Z\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{baseUrl}}/clients/inquiries",
+                                    "host": ["{{baseUrl}}"],
+                                    "path": ["clients", "inquiries"]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "body": "{\n    \"abi\": \"99999\",\n    \"fiscalCode\": \"AAABBB80A01H501Z\",\n    \"clientExists\": false,\n    \"numberOfAccounts\": 0\n}"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
             "name": "Password Management",
             "description": "Password management related endpoints",
             "item": [
