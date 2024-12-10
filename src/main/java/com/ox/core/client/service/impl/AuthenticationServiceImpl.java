@@ -47,6 +47,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             }
 
             log.debug("Validating password for client: {}", client.getClientId());
+            log.debug("Stored password hash: {}", client.getPassword());
+            log.debug("Input password matches stored hash: {}", passwordEncoder.matches(request.getPassword(), client.getPassword()));
+            
             if (!passwordEncoder.matches(request.getPassword(), client.getPassword())) {
                 log.warn("Invalid password attempt for client: {}", client.getClientId());
                 handleFailedAttempt(client, "Invalid credentials");
@@ -113,6 +116,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         log.info("Lock duration has expired for client: {}", client.getClientId());
         // Verify credentials
+        log.debug("Validating password for client: {}", client.getClientId());
+        log.debug("Stored password hash: {}", client.getPassword());
+        log.debug("Input password matches stored hash: {}", passwordEncoder.matches(request.getPassword(), client.getPassword()));
+        
         if (!passwordEncoder.matches(request.getPassword(), client.getPassword())) {
             log.warn("Invalid password attempt for client: {}", client.getClientId());
             // Invalid credentials, keep account locked

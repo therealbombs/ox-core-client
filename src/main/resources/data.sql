@@ -1,9 +1,9 @@
 -- Insert test clients
 INSERT INTO CLIENT (client_id, abi, password, fiscal_code, name, surname, preferred_language, last_access, created_at, modified_at)
 VALUES
-    ('C001', '01234', '$2a$10$rO.RpDf.yVcqgE8.p3IrT.VF0Y8VZtG9R.gBtKF1B1Vc8mXQXEHK.', 'RSSMRA80A01H501A', 'Mario', 'Rossi', 'it', '2024-12-09 21:47:59', '2024-12-09 21:47:59', '2024-12-09 21:47:59'),
-    ('C002', '01234', '$2a$10$rO.RpDf.yVcqgE8.p3IrT.VF0Y8VZtG9R.gBtKF1B1Vc8mXQXEHK.', 'VRDLGU85M15H501B', 'Luigi', 'Verdi', 'en', '2024-12-09 21:47:59', '2024-12-09 21:47:59', '2024-12-09 21:47:59'),
-    ('C003', '56789', '$2a$10$rO.RpDf.yVcqgE8.p3IrT.VF0Y8VZtG9R.gBtKF1B1Vc8mXQXEHK.', 'BNCGNN90D45H501C', 'Giovanna', 'Bianchi', 'it', '2024-12-09 21:47:59', '2024-12-09 21:47:59', '2024-12-09 21:47:59');
+    ('C001', '01234', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'RSSMRA80A01H501A', 'Mario', 'Rossi', 'it', '2024-12-09 21:47:59', '2024-12-09 21:47:59', '2024-12-09 21:47:59'),
+    ('C002', '01234', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'VRDLGU85M15H501B', 'Luigi', 'Verdi', 'en', '2024-12-09 21:47:59', '2024-12-09 21:47:59', '2024-12-09 21:47:59'),
+    ('C003', '56789', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'BNCGNN90D45H501C', 'Giovanna', 'Bianchi', 'it', '2024-12-09 21:47:59', '2024-12-09 21:47:59', '2024-12-09 21:47:59');
 
 -- Insert accounts for Mario Rossi
 INSERT INTO ACCOUNT (account_id, abi, account_type, account_number, status, iban, created_at, modified_at)
