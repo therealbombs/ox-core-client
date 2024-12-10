@@ -2,11 +2,16 @@ CREATE TABLE IF NOT EXISTS CLIENT (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     client_id VARCHAR(255) NOT NULL UNIQUE,
     abi VARCHAR(5) NOT NULL,
+    password VARCHAR(255) NOT NULL,
     fiscal_code VARCHAR(16) NOT NULL UNIQUE,
     name VARCHAR(255) NOT NULL,
     surname VARCHAR(255) NOT NULL,
     preferred_language VARCHAR(2),
+    failed_attempts INT DEFAULT 0,
+    locked_until TIMESTAMP,
+    password_change_required BOOLEAN DEFAULT FALSE,
     last_access TIMESTAMP,
+    previous_access TIMESTAMP,
     created_at TIMESTAMP NOT NULL,
     modified_at TIMESTAMP NOT NULL
 );
