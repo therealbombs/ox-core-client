@@ -87,6 +87,59 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .build();
     }
 
+    @Transactional
+    public AuthenticationResponse unlockAccount(AuthenticationRequest request) {
+        Client client = clientRepository.findByClientIdAndAbi(request.getClientId(), request.getAbi())
+                .orElseThrow(() -> new AuthenticationException("Invalid credentials"));
+
+        // Check if account is actually locked
+        if (client.getLockedUntil() == null) {
+            // Account is not locked, proceed with normal authentication
+            return authenticate(request);
+        }
+
+        // Check if lock duration has expired
+        if (client.getLockedUntil().isAfter(LocalDateTime.now())) {
+            // Account is still locked
+            return AuthenticationResponse.builder()
+                    .clientId(client.getClientId())
+                    .abi(client.getAbi())
+                    .remainingAttempts(0)
+                    .lockedUntil(client.getLockedUntil())
+                    .passwordChangeRequired(client.getPasswordChangeRequired())
+                    .build();
+        }
+
+        // Verify credentials
+        if (!passwordEncoder.matches(request.getPassword(), client.getPassword())) {
+            // Invalid credentials, keep account locked
+            return AuthenticationResponse.builder()
+                    .clientId(client.getClientId())
+                    .abi(client.getAbi())
+                    .remainingAttempts(0)
+                    .lockedUntil(client.getLockedUntil())
+                    .passwordChangeRequired(client.getPasswordChangeRequired())
+                    .build();
+        }
+
+        // Reset failed attempts and unlock account
+        client.setFailedAttempts(0);
+        client.setLockedUntil(null);
+        clientRepository.save(client);
+
+        // Generate token and return successful response
+        String token = jwtTokenProvider.generateToken(client.getClientId(), client.getAbi());
+        log.info("Account unlocked successfully for client: {}", client.getClientId());
+
+        return AuthenticationResponse.builder()
+                .clientId(client.getClientId())
+                .abi(client.getAbi())
+                .token(token)
+                .remainingAttempts(securityProperties.getPassword().getMaxAttempts())
+                .passwordChangeRequired(client.getPasswordChangeRequired())
+                .build();
+    }
+
     private boolean isAccountLocked(Client client) {
         return client.getLockedUntil() != null && 
                LocalDateTime.now().isBefore(client.getLockedUntil());
