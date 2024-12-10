@@ -29,59 +29,50 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    @Transactional
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         log.debug("Authenticating client with username: {}", request.getUsername());
         
-        // Find client by clientId (username)
         Client client = clientRepository.findByClientId(request.getUsername())
-                .orElseThrow(() -> {
-                    log.warn("Client not found with username: {}", request.getUsername());
-                    return new BadCredentialsException("Invalid credentials");
-                });
+                .orElseThrow(() -> new BadCredentialsException("Invalid credentials"));
 
-        // Check if account is locked
         if (isAccountLocked(client)) {
-            log.warn("Account is locked for client: {}", client.getClientId());
             return AuthenticationResponse.builder()
                     .clientId(client.getClientId())
-                    .abi(client.getAbi())
-                    .lockedUntil(client.getLockedUntil())
                     .remainingAttempts(0)
+                    .lockedUntil(client.getLockedUntil())
                     .passwordChangeRequired(client.getPasswordChangeRequired())
                     .build();
         }
 
-        // Validate password format
-        if (!isPasswordValid(request.getPassword())) {
-            log.warn("Invalid password format for client: {}", client.getClientId());
-            return handleFailedAttempt(client, "Invalid password format");
-        }
-
-        // Validate credentials
         if (!passwordEncoder.matches(request.getPassword(), client.getPassword())) {
-            log.warn("Invalid password for client: {}", client.getClientId());
-            return handleFailedAttempt(client, "Invalid credentials");
+            handleFailedAttempt(client, "Invalid credentials");
+            return AuthenticationResponse.builder()
+                    .clientId(client.getClientId())
+                    .remainingAttempts(securityProperties.getPassword().getMaxAttempts() - client.getFailedAttempts())
+                    .passwordChangeRequired(client.getPasswordChangeRequired())
+                    .build();
         }
 
         // Reset failed attempts on successful login
-        client.setFailedAttempts(0);
-        client.setLockedUntil(null);
-        
+        if (client.getFailedAttempts() > 0) {
+            client.setFailedAttempts(0);
+            client.setLockedUntil(null);
+            clientRepository.save(client);
+        }
+
         // Update access times
         LocalDateTime now = LocalDateTime.now();
         client.setPreviousAccess(client.getLastAccess());
         client.setLastAccess(now);
         clientRepository.save(client);
-        
-        // Generate JWT token
+
         String token = jwtTokenProvider.generateToken(client.getClientId(), client.getAbi());
         log.debug("Generated token for client: {}", client.getClientId());
         
         return AuthenticationResponse.builder()
                 .clientId(client.getClientId())
                 .abi(client.getAbi())
-                .token(token)  // Return just the token, client will add "Bearer" prefix
+                .token(token)
                 .remainingAttempts(securityProperties.getPassword().getMaxAttempts())
                 .passwordChangeRequired(client.getPasswordChangeRequired())
                 .build();
@@ -90,7 +81,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Transactional
     public AuthenticationResponse unlockAccount(AuthenticationRequest request) {
         Client client = clientRepository.findByClientIdAndAbi(request.getClientId(), request.getAbi())
-                .orElseThrow(() -> new AuthenticationException("Invalid credentials"));
+                .orElseThrow(() -> new BadCredentialsException("Invalid credentials"));
 
         // Check if account is actually locked
         if (client.getLockedUntil() == null) {

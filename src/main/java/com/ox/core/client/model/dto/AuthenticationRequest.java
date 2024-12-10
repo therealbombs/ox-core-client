@@ -2,7 +2,6 @@ package com.ox.core.client.model.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,25 +14,17 @@ import lombok.NoArgsConstructor;
 @Schema(description = "Request object for client authentication")
 public class AuthenticationRequest {
 
-    @NotBlank(message = "Client ID is required")
+    @NotBlank(message = "Username is required")
     @Schema(
-        description = "Unique identifier for the client",
+        description = "Username (Client ID)",
         example = "C001",
         requiredMode = Schema.RequiredMode.REQUIRED
     )
-    private String clientId;
-
-    @NotBlank(message = "ABI code is required")
-    @Schema(
-        description = "ABI (Bank identification) code",
-        example = "01234",
-        requiredMode = Schema.RequiredMode.REQUIRED
-    )
-    private String abi;
+    private String username;
 
     @NotBlank(message = "Password is required")
     @Schema(
-        description = "Client's password. Must meet password policy requirements",
+        description = "Client's password",
         example = "Password123!",
         requiredMode = Schema.RequiredMode.REQUIRED
     )

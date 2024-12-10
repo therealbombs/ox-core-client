@@ -21,7 +21,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"clientId\": \"{{clientId}}\",\n    \"abi\": \"{{abi}}\",\n    \"password\": \"{{password}}\"\n}"
+                            "raw": "{\n    \"username\": \"{{clientId}}\",\n    \"abi\": \"{{abi}}\",\n    \"password\": \"{{password}}\"\n}"
                         },
                         "url": {
                             "raw": "{{baseUrl}}/auth/login",
@@ -43,7 +43,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"clientId\": \"{{clientId}}\",\n    \"abi\": \"{{abi}}\",\n    \"password\": \"{{invalidPassword}}\"\n}"
+                            "raw": "{\n    \"username\": \"{{clientId}}\",\n    \"abi\": \"{{abi}}\",\n    \"password\": \"{{invalidPassword}}\"\n}"
                         },
                         "url": {
                             "raw": "{{baseUrl}}/auth/login",
@@ -65,7 +65,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"clientId\": \"{{clientId}}\",\n    \"abi\": \"{{abi}}\",\n    \"password\": \"{{password}}\"\n}"
+                            "raw": "{\n    \"username\": \"{{clientId}}\",\n    \"abi\": \"{{abi}}\",\n    \"password\": \"{{password}}\"\n}"
                         },
                         "url": {
                             "raw": "{{baseUrl}}/auth/unlock",
@@ -97,12 +97,12 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"clientId\": \"{{clientId}}\",\n    \"abi\": \"{{abi}}\",\n    \"currentPassword\": \"{{password}}\",\n    \"newPassword\": \"{{newPassword}}\"\n}"
+                            "raw": "{\n    \"username\": \"{{clientId}}\",\n    \"currentPassword\": \"{{password}}\",\n    \"newPassword\": \"{{newPassword}}\"\n}"
                         },
                         "url": {
-                            "raw": "{{baseUrl}}/password/change",
+                            "raw": "{{baseUrl}}/auth/password/change",
                             "host": ["{{baseUrl}}"],
-                            "path": ["password", "change"]
+                            "path": ["auth", "password", "change"]
                         },
                         "description": "Change client's password"
                     }
