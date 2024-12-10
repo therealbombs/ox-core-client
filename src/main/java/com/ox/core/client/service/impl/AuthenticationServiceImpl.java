@@ -59,7 +59,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             }
 
             log.debug("Validating password for client: {}", client.getClientId());
-            if (!passwordEncoder.matches(request.getPassword(), client.getPassword())) {
+            log.debug("Stored password hash: {}", client.getPassword());
+            log.debug("Attempting to match password: {}", request.getPassword());
+            boolean matches = passwordEncoder.matches(request.getPassword(), client.getPassword());
+            log.debug("Password match result: {}", matches);
+            
+            if (!matches) {
                 handleFailedAttempt(client);
                 log.error("Authentication failed: Invalid credentials");
                 auditService.logAuthenticationAttempt(client.getClientId(), client.getAbi(), 
