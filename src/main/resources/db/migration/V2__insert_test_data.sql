@@ -1,10 +1,10 @@
 -- Insert test clients
-INSERT INTO CLIENT (client_id, abi, password, fiscal_code, name, surname, preferred_language, failed_attempts, locked_until, password_change_required, last_access, previous_access, created_at, modified_at)
+INSERT INTO CLIENT (client_id, abi, password, fiscal_code, first_name, last_name, email, phone, failed_attempts, locked_until, last_access, previous_access, created_at, modified_at)
 VALUES
-    ('12345678', '03500', 'Pippero666!', 'RSSMRA80A01H501U', 'Mario', 'Rossi', 'it', 0, NULL, false, '2024-12-09 21:47:59', NULL, '2024-12-09 21:47:59', '2024-12-09 21:47:59'),
-    ('23456789', '03500', 'Pippero666!', 'VRDLGU85M15H501V', 'Luigi', 'Verdi', 'en', 0, NULL, false, '2024-12-09 21:47:59', NULL, '2024-12-09 21:47:59', '2024-12-09 21:47:59'),
-    ('34567890', '03500', 'Pippero666!', 'BNCGNN90D45H501B', 'Giovanna', 'Bianchi', 'it', 0, NULL, false, '2024-12-09 21:47:59', NULL, '2024-12-09 21:47:59', '2024-12-09 21:47:59'),
-    ('45678901', '03500', 'Pippero666!', 'NREFNC75P07H501C', 'Francesco', 'Neri', 'it', 0, NULL, false, '2024-12-09 21:47:59', NULL, '2024-12-09 21:47:59', '2024-12-09 21:47:59');
+    ('12345678', '03500', 'Pippero666!', 'RSSMRA80A01H501U', 'Mario', 'Rossi', 'mario.rossi@email.com', '+391234567890', 0, NULL, '2024-12-09 21:47:59', NULL, '2024-12-09 21:47:59', '2024-12-09 21:47:59'),
+    ('23456789', '03500', 'Pippero666!', 'VRDLGU85M15H501V', 'Luigi', 'Verdi', 'luigi.verdi@email.com', '+391234567891', 0, NULL, '2024-12-09 21:47:59', NULL, '2024-12-09 21:47:59', '2024-12-09 21:47:59'),
+    ('34567890', '03500', 'Pippero666!', 'BNCGNN90D45H501B', 'Giovanna', 'Bianchi', 'giovanna.bianchi@email.com', '+391234567892', 0, NULL, '2024-12-09 21:47:59', NULL, '2024-12-09 21:47:59', '2024-12-09 21:47:59'),
+    ('45678901', '03500', 'Pippero666!', 'NREFNC75P07H501C', 'Francesco', 'Neri', 'francesco.neri@email.com', '+391234567893', 0, NULL, '2024-12-09 21:47:59', NULL, '2024-12-09 21:47:59', '2024-12-09 21:47:59');
 
 -- Insert accounts for Mario Rossi
 INSERT INTO ACCOUNT (account_id, abi, account_type, account_number, status, iban, created_at, modified_at)
