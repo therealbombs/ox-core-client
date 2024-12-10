@@ -21,8 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/auth")
-@Tag(name = "Authentication", description = "Authentication related endpoints")
+@RequestMapping("/auth")
+@Tag(name = "Authentication", description = "Endpoints for user authentication")
 @RequiredArgsConstructor
 public class AuthenticationController {
 
@@ -97,7 +97,7 @@ public class AuthenticationController {
                         "status": 400,
                         "error": "Bad Request",
                         "message": "Invalid request format",
-                        "path": "/api/v1/auth/login"
+                        "path": "/auth/login"
                     }
                     """)
             )

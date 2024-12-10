@@ -22,9 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/clients/inquiries")
+@RequestMapping("/clients/inquiries")
 @RequiredArgsConstructor
-@Tag(name = "Client Inquiries", description = "Client inquiry operations")
+@Tag(name = "Client Inquiry", description = "Endpoints for client inquiries")
 public class InquiryController {
 
     private final ClientService clientService;
@@ -65,7 +65,7 @@ public class InquiryController {
                         "status": 400,
                         "error": "Bad Request",
                         "message": "Invalid request format",
-                        "path": "/api/v1/clients/inquiries"
+                        "path": "/clients/inquiries"
                     }
                     """)
             )

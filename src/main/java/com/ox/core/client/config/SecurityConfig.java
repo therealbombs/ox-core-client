@@ -31,8 +31,8 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> {
                 auth.requestMatchers(
-                    new AntPathRequestMatcher("/api/v1/auth/**"),
-                    new AntPathRequestMatcher("/api/v1/clients/inquiries/**"),
+                    new AntPathRequestMatcher("/auth/**"),
+                    new AntPathRequestMatcher("/clients/inquiries/**"),
                     new AntPathRequestMatcher("/swagger-ui/**"),
                     new AntPathRequestMatcher("/swagger-ui.html"),
                     new AntPathRequestMatcher("/v3/api-docs/**"),
@@ -40,7 +40,7 @@ public class SecurityConfig {
                 ).permitAll()
                 .anyRequest().authenticated();
                 
-                log.info("Configured permitted paths: /api/v1/auth/**, /api/v1/clients/inquiries/**, /swagger-ui/**, /swagger-ui.html, /v3/api-docs/**, /h2-console/**");
+                log.info("Configured permitted paths without /api/v1 prefix as it's handled by context-path");
             })
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
