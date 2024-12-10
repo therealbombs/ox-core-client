@@ -14,17 +14,25 @@ import lombok.NoArgsConstructor;
 @Schema(description = "Request object for client authentication")
 public class AuthenticationRequest {
 
-    @NotBlank(message = "Username is required")
+    @NotBlank(message = "Client ID is required")
     @Schema(
-        description = "Username (Client ID)",
+        description = "Unique identifier for the client",
         example = "C001",
         requiredMode = Schema.RequiredMode.REQUIRED
     )
-    private String username;
+    private String clientId;
+
+    @NotBlank(message = "ABI code is required")
+    @Schema(
+        description = "ABI (Bank identification) code",
+        example = "01234",
+        requiredMode = Schema.RequiredMode.REQUIRED
+    )
+    private String abi;
 
     @NotBlank(message = "Password is required")
     @Schema(
-        description = "Client's password",
+        description = "Client's password. Must meet password policy requirements",
         example = "Password123!",
         requiredMode = Schema.RequiredMode.REQUIRED
     )

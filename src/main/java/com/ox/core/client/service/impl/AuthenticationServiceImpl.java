@@ -30,52 +30,44 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        log.debug("Authenticating client with username: {}", request.getUsername());
-        
-        Client client = clientRepository.findByClientId(request.getUsername())
-                .orElseThrow(() -> new BadCredentialsException("Invalid credentials"));
+        try {
+            var client = clientRepository.findByClientIdAndAbi(request.getClientId(), request.getAbi())
+                    .orElseThrow(() -> new BadCredentialsException("Invalid credentials"));
 
-        if (isAccountLocked(client)) {
-            return AuthenticationResponse.builder()
-                    .clientId(client.getClientId())
-                    .remainingAttempts(0)
-                    .lockedUntil(client.getLockedUntil())
-                    .passwordChangeRequired(client.getPasswordChangeRequired())
-                    .build();
-        }
+            if (isAccountLocked(client)) {
+                throw new LockedException("Account is locked");
+            }
 
-        if (!passwordEncoder.matches(request.getPassword(), client.getPassword())) {
-            handleFailedAttempt(client, "Invalid credentials");
-            return AuthenticationResponse.builder()
-                    .clientId(client.getClientId())
-                    .remainingAttempts(securityProperties.getPassword().getMaxAttempts() - client.getFailedAttempts())
-                    .passwordChangeRequired(client.getPasswordChangeRequired())
-                    .build();
-        }
+            if (!passwordEncoder.matches(request.getPassword(), client.getPassword())) {
+                handleFailedAttempt(client, "Invalid credentials");
+                throw new BadCredentialsException("Invalid credentials");
+            }
 
-        // Reset failed attempts on successful login
-        if (client.getFailedAttempts() > 0) {
-            client.setFailedAttempts(0);
-            client.setLockedUntil(null);
+            // Reset failed attempts on successful login
+            if (client.getFailedAttempts() > 0) {
+                client.setFailedAttempts(0);
+                client.setLockedUntil(null);
+                clientRepository.save(client);
+            }
+
+            // Update access times
+            LocalDateTime now = LocalDateTime.now();
+            client.setPreviousAccess(client.getLastAccess());
+            client.setLastAccess(now);
             clientRepository.save(client);
+
+            String token = jwtTokenProvider.generateToken(client.getClientId(), client.getAbi());
+            
+            return AuthenticationResponse.builder()
+                    .token(token)
+                    .build();
+
+        } catch (BadCredentialsException | LockedException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error("Authentication error", e);
+            throw new BadCredentialsException("Authentication failed");
         }
-
-        // Update access times
-        LocalDateTime now = LocalDateTime.now();
-        client.setPreviousAccess(client.getLastAccess());
-        client.setLastAccess(now);
-        clientRepository.save(client);
-
-        String token = jwtTokenProvider.generateToken(client.getClientId(), client.getAbi());
-        log.debug("Generated token for client: {}", client.getClientId());
-        
-        return AuthenticationResponse.builder()
-                .clientId(client.getClientId())
-                .abi(client.getAbi())
-                .token(token)
-                .remainingAttempts(securityProperties.getPassword().getMaxAttempts())
-                .passwordChangeRequired(client.getPasswordChangeRequired())
-                .build();
     }
 
     @Transactional
