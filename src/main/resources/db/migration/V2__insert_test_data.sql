@@ -1,55 +1,47 @@
 -- Insert test clients
 INSERT INTO CLIENT (client_id, abi, password, fiscal_code, name, surname, preferred_language, failed_attempts, locked_until, password_change_required, last_access, previous_access, created_at, modified_at)
 VALUES
-    ('C001', '01234', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'RSSMRA80A01H501A', 'Mario', 'Rossi', 'it', 0, NULL, false, '2024-12-09 21:47:59', NULL, '2024-12-09 21:47:59', '2024-12-09 21:47:59'),
-    ('C002', '01234', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'VRDLGU85M15H501B', 'Luigi', 'Verdi', 'en', 0, NULL, false, '2024-12-09 21:47:59', NULL, '2024-12-09 21:47:59', '2024-12-09 21:47:59'),
-    ('C003', '56789', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'BNCGNN90D45H501C', 'Giovanna', 'Bianchi', 'it', 0, NULL, false, '2024-12-09 21:47:59', NULL, '2024-12-09 21:47:59', '2024-12-09 21:47:59'),
-    ('C004', '90123', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'RSSMRA80A01H501D', 'Francesco', 'Rossi', 'it', 0, NULL, false, '2024-12-09 21:47:59', NULL, '2024-12-09 21:47:59', '2024-12-09 21:47:59');
+    ('12345678', '03500', 'Pippero666!', 'RSSMRA80A01H501U', 'Mario', 'Rossi', 'it', 0, NULL, false, '2024-12-09 21:47:59', NULL, '2024-12-09 21:47:59', '2024-12-09 21:47:59'),
+    ('23456789', '03500', 'Pippero666!', 'VRDLGU85M15H501V', 'Luigi', 'Verdi', 'en', 0, NULL, false, '2024-12-09 21:47:59', NULL, '2024-12-09 21:47:59', '2024-12-09 21:47:59'),
+    ('34567890', '03500', 'Pippero666!', 'BNCGNN90D45H501B', 'Giovanna', 'Bianchi', 'it', 0, NULL, false, '2024-12-09 21:47:59', NULL, '2024-12-09 21:47:59', '2024-12-09 21:47:59'),
+    ('45678901', '03500', 'Pippero666!', 'NREFNC75P07H501C', 'Francesco', 'Neri', 'it', 0, NULL, false, '2024-12-09 21:47:59', NULL, '2024-12-09 21:47:59', '2024-12-09 21:47:59');
 
 -- Insert accounts for Mario Rossi
 INSERT INTO ACCOUNT (account_id, abi, account_type, account_number, status, iban, created_at, modified_at)
 VALUES
-    ('A001', '01234', 'CURRENT_ACCOUNT', 'CA001', 'ACTIVE', 'IT01234000000CA001', '2024-12-09 21:47:59', '2024-12-09 21:47:59'),
-    ('A002', '01234', 'DEPOSIT_ACCOUNT', 'DA001', 'ACTIVE', 'IT01234000000DA001', '2024-12-09 21:47:59', '2024-12-09 21:47:59'),
-    ('A003', '01234', 'SECURITIES_ACCOUNT', 'SA001', 'TO_BE_ACTIVATED', 'IT01234000000SA001', '2024-12-09 21:47:59', '2024-12-09 21:47:59');
+    ('A001', '03500', 'CURRENT_ACCOUNT', 'IT60X0350001234567890123456', 'ACTIVE', 'IT60X0350001234567890123456', '2024-12-09 21:47:59', '2024-12-09 21:47:59');
 
 -- Insert accounts for Luigi Verdi
 INSERT INTO ACCOUNT (account_id, abi, account_type, account_number, status, iban, created_at, modified_at)
 VALUES
-    ('A004', '01234', 'CURRENT_ACCOUNT', 'CA002', 'ACTIVE', 'IT01234000000CA002', '2024-12-09 21:47:59', '2024-12-09 21:47:59'),
-    ('A005', '01234', 'SECURITIES_ACCOUNT', 'SA002', 'BLOCKED', 'IT01234000000SA002', '2024-12-09 21:47:59', '2024-12-09 21:47:59');
+    ('A002', '03500', 'CURRENT_ACCOUNT', 'IT60X0350002345678901234567', 'ACTIVE', 'IT60X0350002345678901234567', '2024-12-09 21:47:59', '2024-12-09 21:47:59');
 
 -- Insert accounts for Giovanna Bianchi
 INSERT INTO ACCOUNT (account_id, abi, account_type, account_number, status, iban, created_at, modified_at)
 VALUES
-    ('A006', '56789', 'CURRENT_ACCOUNT', 'CA003', 'ACTIVE', 'IT56789000000CA003', '2024-12-09 21:47:59', '2024-12-09 21:47:59'),
-    ('A007', '56789', 'DEPOSIT_ACCOUNT', 'DA002', 'CLOSED', 'IT56789000000DA002', '2024-12-09 21:47:59', '2024-12-09 21:47:59');
+    ('A003', '03500', 'CURRENT_ACCOUNT', 'IT60X0350003456789012345678', 'ACTIVE', 'IT60X0350003456789012345678', '2024-12-09 21:47:59', '2024-12-09 21:47:59');
 
 -- Insert accounts for Francesco Rossi
 INSERT INTO ACCOUNT (account_id, abi, account_type, account_number, status, iban, created_at, modified_at)
 VALUES
-    ('A008', '90123', 'CURRENT_ACCOUNT', 'CA004', 'ACTIVE', 'IT90123000000CA004', '2024-12-09 21:47:59', '2024-12-09 21:47:59');
+    ('A004', '03500', 'CURRENT_ACCOUNT', 'IT60X0350004567890123456789', 'ACTIVE', 'IT60X0350004567890123456789', '2024-12-09 21:47:59', '2024-12-09 21:47:59');
 
 -- Insert account holders for Mario Rossi's accounts
 INSERT INTO ACCOUNT_HOLDER (holder_id, account_id, client_id, holder_type, created_at)
 VALUES
-    ('H001', 'A001', 'C001', 'PRIMARY', '2024-12-09 21:47:59'),
-    ('H002', 'A002', 'C001', 'PRIMARY', '2024-12-09 21:47:59'),
-    ('H003', 'A003', 'C001', 'PRIMARY', '2024-12-09 21:47:59');
+    ('H001', 'A001', '12345678', 'PRIMARY', '2024-12-09 21:47:59');
 
 -- Insert account holders for Luigi Verdi's accounts
 INSERT INTO ACCOUNT_HOLDER (holder_id, account_id, client_id, holder_type, created_at)
 VALUES
-    ('H004', 'A004', 'C002', 'PRIMARY', '2024-12-09 21:47:59'),
-    ('H005', 'A005', 'C002', 'PRIMARY', '2024-12-09 21:47:59');
+    ('H002', 'A002', '23456789', 'PRIMARY', '2024-12-09 21:47:59');
 
 -- Insert account holders for Giovanna Bianchi's accounts
 INSERT INTO ACCOUNT_HOLDER (holder_id, account_id, client_id, holder_type, created_at)
 VALUES
-    ('H006', 'A006', 'C003', 'PRIMARY', '2024-12-09 21:47:59'),
-    ('H007', 'A007', 'C003', 'PRIMARY', '2024-12-09 21:47:59');
+    ('H003', 'A003', '34567890', 'PRIMARY', '2024-12-09 21:47:59');
 
 -- Insert account holders for Francesco Rossi's accounts
 INSERT INTO ACCOUNT_HOLDER (holder_id, account_id, client_id, holder_type, created_at)
 VALUES
-    ('H008', 'A008', 'C004', 'PRIMARY', '2024-12-09 21:47:59');
+    ('H004', 'A004', '45678901', 'PRIMARY', '2024-12-09 21:47:59');

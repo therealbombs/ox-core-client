@@ -1,19 +1,20 @@
 CREATE TABLE CLIENT (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    client_id VARCHAR(255) NOT NULL UNIQUE,
+    client_id VARCHAR(8) NOT NULL,
     abi VARCHAR(5) NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    fiscal_code VARCHAR(16) NOT NULL UNIQUE,
-    name VARCHAR(255) NOT NULL,
-    surname VARCHAR(255) NOT NULL,
-    preferred_language VARCHAR(2),
-    failed_attempts INTEGER DEFAULT 0,
+    password VARCHAR(50) NOT NULL,
+    fiscal_code VARCHAR(16) NOT NULL,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email VARCHAR(100),
+    phone VARCHAR(20),
+    failed_attempts INT DEFAULT 0,
     locked_until TIMESTAMP,
-    password_change_required BOOLEAN DEFAULT FALSE,
     last_access TIMESTAMP,
     previous_access TIMESTAMP,
     created_at TIMESTAMP NOT NULL,
-    modified_at TIMESTAMP NOT NULL
+    modified_at TIMESTAMP NOT NULL,
+    CONSTRAINT uk_client_id_abi UNIQUE (client_id, abi)
 );
 
 CREATE TABLE ACCOUNT (
@@ -41,14 +42,14 @@ CREATE TABLE ACCOUNT_HOLDER (
 
 CREATE TABLE AUDIT_LOG (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    client_id VARCHAR(8) NOT NULL,
+    abi VARCHAR(5) NOT NULL,
     event_type VARCHAR(50) NOT NULL,
-    client_id VARCHAR(50),
-    abi VARCHAR(5),
-    ip_address VARCHAR(45),
-    user_agent VARCHAR(255),
     status VARCHAR(20) NOT NULL,
-    message VARCHAR(255),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    message TEXT,
+    ip_address VARCHAR(45),
+    user_agent TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX idx_audit_client_id ON AUDIT_LOG(client_id);
