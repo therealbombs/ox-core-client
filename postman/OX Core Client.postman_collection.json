@@ -1,0 +1,165 @@
+{
+    "info": {
+        "name": "OX Core Client",
+        "description": "Collection for OX Core Client API endpoints",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Authentication",
+            "description": "Authentication related endpoints",
+            "item": [
+                {
+                    "name": "Login",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"clientId\": \"C001\",\n    \"abi\": \"01234\",\n    \"password\": \"Password123!\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/auth/login",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["auth", "login"]
+                        },
+                        "description": "Authenticate a client and receive a JWT token"
+                    },
+                    "response": [
+                        {
+                            "name": "Successful Response",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"clientId\": \"C001\",\n    \"abi\": \"01234\",\n    \"password\": \"Password123!\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{baseUrl}}/auth/login"
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "body": "{\n    \"clientId\": \"C001\",\n    \"abi\": \"01234\",\n    \"token\": \"eyJhbGciOiJIUzI1NiJ9...\",\n    \"remainingAttempts\": 3,\n    \"passwordChangeRequired\": false,\n    \"lockedUntil\": null\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Unlock Account",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"clientId\": \"C001\",\n    \"abi\": \"01234\",\n    \"password\": \"Password123!\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/auth/unlock",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["auth", "unlock"]
+                        },
+                        "description": "Attempt to unlock a locked client account"
+                    },
+                    "response": [
+                        {
+                            "name": "Successful Unlock",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"clientId\": \"C001\",\n    \"abi\": \"01234\",\n    \"password\": \"Password123!\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{baseUrl}}/auth/unlock"
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "body": "{\n    \"clientId\": \"C001\",\n    \"abi\": \"01234\",\n    \"token\": \"eyJhbGciOiJIUzI1NiJ9...\",\n    \"remainingAttempts\": 3,\n    \"passwordChangeRequired\": false,\n    \"lockedUntil\": null\n}"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Password Management",
+            "description": "Password management related endpoints",
+            "item": [
+                {
+                    "name": "Change Password",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"clientId\": \"C001\",\n    \"abi\": \"01234\",\n    \"currentPassword\": \"Password123!\",\n    \"newPassword\": \"NewPassword123!\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/password/change",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["password", "change"]
+                        },
+                        "description": "Change client's password"
+                    }
+                }
+            ]
+        }
+    ],
+    "event": [
+        {
+            "listen": "prerequest",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        },
+        {
+            "listen": "test",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    "if (pm.response.code === 200 && pm.response.json().token) {",
+                    "    pm.environment.set(\"token\", pm.response.json().token);",
+                    "}"
+                ]
+            }
+        }
+    ]
+}
