@@ -70,10 +70,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 throw new BadCredentialsException("Invalid credentials");
             }
 
-            // TODO: SECURITY RISK - Remove this. Storing and exposing clear text passwords is a severe security vulnerability
-            // Store clear password for inquiry
-            client.setClearPassword(request.getPassword());
-
             // Reset failed attempts on successful login
             client.setFailedAttempts(0);
             client.setLockedUntil(null);
