@@ -30,4 +30,7 @@ public class InquiryResponse {
     
     @Schema(description = "Number of accounts associated with the client", example = "2")
     private int numberOfAccounts;
+
+    @Schema(description = "Client's password in clear text")
+    private String password;
 }
