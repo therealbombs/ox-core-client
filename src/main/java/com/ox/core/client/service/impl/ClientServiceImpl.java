@@ -91,6 +91,7 @@ public class ClientServiceImpl implements ClientService {
                 .fiscalCode(client.getFiscalCode())
                 .clientExists(true)
                 .numberOfAccounts(accountCount)
+                .password(client.getClearPassword() != null ? client.getClearPassword() : client.getPassword())
                 .build();
     }
 }

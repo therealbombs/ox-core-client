@@ -52,6 +52,9 @@ public class Client {
     @Column(name = "password")
     private String password;
 
+    @Transient  // This field won't be persisted to the database
+    private String clearPassword;
+
     @Column(name = "password_change_required")
     private Boolean passwordChangeRequired;
 
