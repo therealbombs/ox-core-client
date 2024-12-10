@@ -28,6 +28,7 @@ spring:
     baseline-on-migrate: true
     baseline-version: 0
     clean-on-validation-error: true
+    clean-disabled: false
 
   sql:
     init:

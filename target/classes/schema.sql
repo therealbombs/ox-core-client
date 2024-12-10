@@ -33,3 +33,19 @@ CREATE TABLE IF NOT EXISTS ACCOUNT_HOLDER (
     FOREIGN KEY (account_id) REFERENCES ACCOUNT(account_id),
     FOREIGN KEY (client_id) REFERENCES CLIENT(client_id)
 );
+
+CREATE TABLE IF NOT EXISTS AUDIT_LOG (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    event_type VARCHAR(50) NOT NULL,
+    client_id VARCHAR(50),
+    abi VARCHAR(5),
+    ip_address VARCHAR(45),
+    user_agent VARCHAR(255),
+    status VARCHAR(20) NOT NULL,
+    message VARCHAR(255),
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_audit_client_id ON AUDIT_LOG(client_id);
+CREATE INDEX IF NOT EXISTS idx_audit_event_type ON AUDIT_LOG(event_type);
+CREATE INDEX IF NOT EXISTS idx_audit_created_at ON AUDIT_LOG(created_at);
