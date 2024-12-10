@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -18,7 +17,6 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString(exclude = {"password"})
 public class Client {
     @Id
     @Column(name = "client_id")
@@ -51,7 +49,6 @@ public class Client {
     @Column(name = "locked_until")
     private LocalDateTime lockedUntil;
 
-    @ToString.Exclude
     @Column(name = "password")
     private String password;
 
@@ -68,4 +65,23 @@ public class Client {
 
     @OneToMany(mappedBy = "client")
     private Set<AccountHolder> accountHolders;
+
+    @Override
+    public String toString() {
+        return "Client{" +
+                "clientId='" + clientId + '\'' +
+                ", abi='" + abi + '\'' +
+                ", fiscalCode='" + fiscalCode + '\'' +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", preferredLanguage='" + preferredLanguage + '\'' +
+                ", lastAccess=" + lastAccess +
+                ", previousAccess=" + previousAccess +
+                ", failedAttempts=" + failedAttempts +
+                ", lockedUntil=" + lockedUntil +
+                ", passwordChangeRequired=" + passwordChangeRequired +
+                ", createdAt=" + createdAt +
+                ", modifiedAt=" + modifiedAt +
+                '}';
+    }
 }

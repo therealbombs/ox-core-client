@@ -8,14 +8,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(description = "Request object for client authentication")
-@ToString(exclude = "password")
 public class AuthenticationRequest {
 
     @NotBlank(message = "Client ID is required")
@@ -41,6 +39,13 @@ public class AuthenticationRequest {
         requiredMode = Schema.RequiredMode.REQUIRED
     )
     @JsonProperty(access = Access.WRITE_ONLY)
-    @ToString.Exclude
     private String password;
+
+    @Override
+    public String toString() {
+        return "AuthenticationRequest{" +
+                "clientId='" + clientId + '\'' +
+                ", abi='" + abi + '\'' +
+                '}';
+    }
 }
