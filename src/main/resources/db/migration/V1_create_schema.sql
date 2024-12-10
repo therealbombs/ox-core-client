@@ -39,6 +39,7 @@ CREATE TABLE account_holder (
     holder_id VARCHAR(36) NOT NULL,
     account_id VARCHAR(36) NOT NULL,
     client_id VARCHAR(8) NOT NULL,
+    abi VARCHAR(5) NOT NULL,
     holder_type VARCHAR(20) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT uk_holder_id UNIQUE (holder_id),
@@ -65,7 +66,7 @@ CREATE INDEX idx_client_id_abi ON client(client_id, abi);
 CREATE INDEX idx_account_abi ON account(abi);
 CREATE INDEX idx_account_status ON account(status);
 CREATE INDEX idx_holder_account ON account_holder(account_id);
-CREATE INDEX idx_holder_client ON account_holder(client_id);
+CREATE INDEX idx_holder_client ON account_holder(client_id, abi);
 CREATE INDEX idx_audit_client ON audit_log(client_id, abi);
 CREATE INDEX idx_audit_event ON audit_log(event_type);
 CREATE INDEX idx_audit_created ON audit_log(created_at);
