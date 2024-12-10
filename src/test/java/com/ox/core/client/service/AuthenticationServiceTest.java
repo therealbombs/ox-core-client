@@ -114,7 +114,7 @@ class AuthenticationServiceTest {
     @Test
     void unlockAccount_WithExpiredLockAndValidCredentials_ShouldUnlock() {
         // Arrange
-        Client client = clientRepository.findByClientIdAndAbi(CLIENT_ID, ABI).get();
+        Client client = clientRepository.findByAbiAndClientId(ABI, CLIENT_ID).get();
         client.setLockedUntil(LocalDateTime.now().minusMinutes(1));
         client.setFailedAttempts(3);
         clientRepository.save(client);
@@ -133,7 +133,7 @@ class AuthenticationServiceTest {
         assertNull(response.getLockedUntil());
 
         // Verify client state in database
-        Client updatedClient = clientRepository.findByClientIdAndAbi(CLIENT_ID, ABI).get();
+        Client updatedClient = clientRepository.findByAbiAndClientId(ABI, CLIENT_ID).get();
         assertEquals(0, updatedClient.getFailedAttempts());
         assertNull(updatedClient.getLockedUntil());
     }
