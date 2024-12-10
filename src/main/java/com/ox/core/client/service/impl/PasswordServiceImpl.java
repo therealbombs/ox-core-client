@@ -9,9 +9,6 @@ import com.ox.core.client.repository.ClientRepository;
 import com.ox.core.client.service.PasswordService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.LockedException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +21,6 @@ import java.util.regex.Pattern;
 public class PasswordServiceImpl implements PasswordService {
 
     private final ClientRepository clientRepository;
-    private final PasswordEncoder passwordEncoder;
     private final SecurityProperties securityProperties;
 
     @Override
@@ -45,7 +41,7 @@ public class PasswordServiceImpl implements PasswordService {
         }
 
         // Validate current password
-        if (!passwordEncoder.matches(request.getCurrentPassword(), client.getPassword())) {
+        if (!request.getCurrentPassword().equals(client.getPassword())) {
             return handleFailedAttempt(client, "Current password is incorrect");
         }
 
@@ -68,7 +64,7 @@ public class PasswordServiceImpl implements PasswordService {
         }
 
         // Check if new password is different from current
-        if (passwordEncoder.matches(request.getNewPassword(), client.getPassword())) {
+        if (request.getNewPassword().equals(client.getPassword())) {
             return ChangePasswordResponse.builder()
                     .message("New password must be different from current password")
                     .remainingAttempts(getRemainingAttempts(client))
@@ -77,7 +73,7 @@ public class PasswordServiceImpl implements PasswordService {
         }
 
         // Update password
-        client.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        client.setPassword(request.getNewPassword());
         client.setPasswordChangeRequired(false);
         client.setFailedAttempts(0);
         client.setLockedUntil(null);

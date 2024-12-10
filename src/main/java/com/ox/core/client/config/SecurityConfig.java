@@ -9,7 +9,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -26,8 +25,6 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         log.info("Configuring security filter chain...");
         
-
-
         http
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> {
@@ -44,7 +41,7 @@ public class SecurityConfig {
                     return false;
                 }).permitAll();
 
-                log.info("mb step 1");
+                 
                 auth.requestMatchers(
                     new AntPathRequestMatcher("/auth/**"),  
                     new AntPathRequestMatcher("/swagger-ui/**"),
@@ -53,7 +50,7 @@ public class SecurityConfig {
                     new AntPathRequestMatcher("/h2-console/**")
                 ).permitAll()
                 .anyRequest().authenticated();
-                log.info("mb step 2");
+             
                 log.info("Configured permitted paths without /api/v1 prefix as it's handled by context-path");
             })
             .sessionManagement(session -> session
@@ -66,10 +63,5 @@ public class SecurityConfig {
 
         log.info("Security filter chain configuration completed");
         return http.build();
-    }
-
-    @Bean
-    public NoOpPasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
     }
 }

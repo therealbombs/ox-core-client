@@ -12,9 +12,7 @@ import com.ox.core.client.service.AuthenticationService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.LockedException;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -27,10 +25,10 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
 
+    @Autowired
     private final ClientRepository clientRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final SecurityProperties securityProperties;
-    private final PasswordEncoder passwordEncoder;
     private final AuditService auditService;
 
     @Override
@@ -59,10 +57,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             }
 
             log.debug("Validating password for client: {}", client.getClientId());
-            log.debug("Stored password hash: {}", client.getPassword());
-            log.debug("Input password matches stored hash: {}", passwordEncoder.matches(request.getPassword(), client.getPassword()));
-            
-            if (!passwordEncoder.matches(request.getPassword(), client.getPassword())) {
+            if (!request.getPassword().equals(client.getPassword())) {
                 handleFailedAttempt(client);
                 log.error("Authentication failed: Invalid credentials");
                 auditService.logAuthenticationAttempt(client.getClientId(), client.getAbi(), 
@@ -123,7 +118,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 throw new LockedException("Account is locked");
             }
 
-            if (!passwordEncoder.matches(request.getPassword(), client.getPassword())) {
+            if (!request.getPassword().equals(client.getPassword())) {
                 handleFailedAttempt(client);
                 auditService.logAuthenticationAttempt(client.getClientId(), client.getAbi(), 
                     AuditLog.Status.FAILURE, "Invalid password during unlock attempt", httpRequest);
