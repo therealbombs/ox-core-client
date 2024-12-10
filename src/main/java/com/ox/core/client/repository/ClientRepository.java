@@ -10,6 +10,7 @@ import java.util.Optional;
 public interface ClientRepository extends JpaRepository<Client, String> {
     Optional<Client> findByAbiAndClientId(String abi, String clientId);
     Optional<Client> findByClientId(String clientId);
+    Optional<Client> findByAbiAndFiscalCode(String abi, String fiscalCode);
     Optional<Client> findByFiscalCode(String fiscalCode);
     boolean existsByClientId(String clientId);
 }

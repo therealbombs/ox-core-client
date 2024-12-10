@@ -26,19 +26,19 @@ The collection uses the sample data provided in `data.sql`, which includes:
 1. Mario Rossi (C001)
    - ABI: 01234
    - Fiscal Code: RSSMRA80A01H501A
-   - Password: Password123!
+   - Password: password
 2. Luigi Verdi (C002)
    - ABI: 01234
    - Fiscal Code: VRDLGU85M15H501B
-   - Password: Password123!
+   - Password: password
 3. Giovanna Bianchi (C003)
    - ABI: 56789
    - Fiscal Code: BNCGNN90D45H501C
-   - Password: Password123!
+   - Password: password
 4. Francesco Rossi (C004)
    - ABI: 90123
    - Fiscal Code: RSSMRA80A01H501D
-   - Password: Password123!
+   - Password: password
 
 ### Test Scenarios
 

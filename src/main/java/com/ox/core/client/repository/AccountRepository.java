@@ -17,4 +17,9 @@ public interface AccountRepository extends JpaRepository<Account, String> {
 
     Optional<Account> findByIban(String iban);
     Optional<Account> findByAccountNumber(String accountNumber);
+
+    @Query("SELECT COUNT(DISTINCT a) FROM Account a " +
+           "JOIN a.accountHolders ah " +
+           "WHERE ah.client.clientId = :clientId")
+    int countAccountsByClientId(String clientId);
 }
