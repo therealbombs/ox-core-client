@@ -1,19 +1,23 @@
 -- Insert test clients
-INSERT INTO client (client_id, abi, name) VALUES
-('CLIENT01', '01234', 'Test Bank 1'),
-('CLIENT02', '56789', 'Test Bank 2');
+INSERT INTO client (client_id, abi, password, fiscal_code, name, surname, preferred_language, failed_attempts, password_change_required, created_at, modified_at)
+VALUES 
+('12345678', '01234', '$2a$10$rJ.1.1J1J1J1J1J1J1J.1J1J1J1J1J1J1J1J1J1J1J1J1J1J', 'RSSMRA80A01H501U', 'Mario', 'Rossi', 'IT', 0, false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('87654321', '01234', '$2a$10$rJ.1.1J1J1J1J1J1J1J.1J1J1J1J1J1J1J1J1J1J1J1J1J1J', 'VRDGSP85A01H501V', 'Giuseppe', 'Verdi', 'IT', 0, false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 -- Insert test accounts
-INSERT INTO account (account_id, client_id, abi, account_type, account_number, status, iban) VALUES
-('IT60X0542811101000000123456', 'CLIENT01', '01234', 'CHECKING', 'ACC001', 'ACTIVE', 'IT60X0542811101000000123456'),
-('IT60X0542811101000000789012', 'CLIENT02', '56789', 'SAVINGS', 'ACC002', 'ACTIVE', 'IT60X0542811101000000789012');
+INSERT INTO account (account_id, abi, account_type, account_number, status, iban, created_at, modified_at)
+VALUES 
+('ACC001', '01234', 'CURRENT', '000123456789', 'ACTIVE', 'IT60X0542811101000000123456', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('ACC002', '01234', 'SAVINGS', '000987654321', 'ACTIVE', 'IT60X0542811101000000987654', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 -- Insert test account holders
-INSERT INTO account_holder (holder_id, client_id, abi, account_id, first_name, last_name, fiscal_code) VALUES
-('550e8400-e29b-41d4-a716-446655440000', 'CLIENT01', '01234', 'IT60X0542811101000000123456', 'John', 'Doe', 'DOEJHN80A01F205X'),
-('550e8400-e29b-41d4-a716-446655440001', 'CLIENT02', '56789', 'IT60X0542811101000000789012', 'Jane', 'Smith', 'SMTJNE85A41F205Y');
+INSERT INTO account_holder (holder_id, account_id, client_id, holder_type, created_at)
+VALUES 
+('HOLD001', 'ACC001', '12345678', 'PRIMARY', CURRENT_TIMESTAMP),
+('HOLD002', 'ACC002', '87654321', 'PRIMARY', CURRENT_TIMESTAMP);
 
 -- Insert test audit logs
-INSERT INTO audit_log (entity_type, entity_id, action, details) VALUES
-('CLIENT', 'CLIENT01', 'CREATE', 'Created new client Test Bank 1'),
-('ACCOUNT', 'IT60X0542811101000000123456', 'CREATE', 'Created new checking account');
+INSERT INTO audit_log (event_type, client_id, abi, status, message, created_at)
+VALUES 
+('LOGIN_ATTEMPT', '12345678', '01234', 'SUCCESS', 'Successful login', CURRENT_TIMESTAMP),
+('LOGIN_ATTEMPT', '87654321', '01234', 'SUCCESS', 'Successful login', CURRENT_TIMESTAMP);
