@@ -1,6 +1,6 @@
 package com.ox.core.client.service;
 
-import com.ox.core.client.model.Client;
+import com.ox.core.client.model.entity.Client;
 import com.ox.core.client.model.dto.AuthenticationRequest;
 import com.ox.core.client.model.dto.AuthenticationResponse;
 import com.ox.core.client.repository.ClientRepository;
