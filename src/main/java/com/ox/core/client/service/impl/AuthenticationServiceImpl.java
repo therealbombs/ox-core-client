@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.LockedException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -30,6 +31,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final JwtTokenProvider jwtTokenProvider;
     private final SecurityProperties securityProperties;
     private final AuditService auditService;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
@@ -57,7 +59,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             }
 
             log.debug("Validating password for client: {}", client.getClientId());
-            if (!request.getPassword().equals(client.getPassword())) {
+            if (!passwordEncoder.matches(request.getPassword(), client.getPassword())) {
                 handleFailedAttempt(client);
                 log.error("Authentication failed: Invalid credentials");
                 auditService.logAuthenticationAttempt(client.getClientId(), client.getAbi(), 
@@ -118,7 +120,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 throw new LockedException("Account is locked");
             }
 
-            if (!request.getPassword().equals(client.getPassword())) {
+            if (!passwordEncoder.matches(request.getPassword(), client.getPassword())) {
                 handleFailedAttempt(client);
                 auditService.logAuthenticationAttempt(client.getClientId(), client.getAbi(), 
                     AuditLog.Status.FAILURE, "Invalid password during unlock attempt", httpRequest);
