@@ -45,6 +45,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             log.warn("Account is locked for client: {}", client.getClientId());
             return AuthenticationResponse.builder()
                     .clientId(client.getClientId())
+                    .abi(client.getAbi())
                     .lockedUntil(client.getLockedUntil())
                     .remainingAttempts(0)
                     .passwordChangeRequired(client.getPasswordChangeRequired())
@@ -75,13 +76,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         
         // Generate JWT token
         String token = jwtTokenProvider.generateToken(client.getClientId(), client.getAbi());
-        
-        log.debug("Successfully authenticated client: {}", client.getClientId());
+        log.debug("Generated token for client: {}", client.getClientId());
         
         return AuthenticationResponse.builder()
                 .clientId(client.getClientId())
                 .abi(client.getAbi())
-                .token(token)
+                .token(token)  // Return just the token, client will add "Bearer" prefix
                 .remainingAttempts(securityProperties.getPassword().getMaxAttempts())
                 .passwordChangeRequired(client.getPasswordChangeRequired())
                 .build();
@@ -116,6 +116,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         return AuthenticationResponse.builder()
                 .clientId(client.getClientId())
+                .abi(client.getAbi())
                 .remainingAttempts(remainingAttempts)
                 .lockedUntil(client.getLockedUntil())
                 .passwordChangeRequired(client.getPasswordChangeRequired())
