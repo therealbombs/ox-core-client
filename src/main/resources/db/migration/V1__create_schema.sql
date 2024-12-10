@@ -12,10 +12,15 @@ CREATE TABLE account (
     client_id VARCHAR(8) NOT NULL,
     abi VARCHAR(5) NOT NULL,
     account_type VARCHAR(50) NOT NULL,
+    account_number VARCHAR(34) NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'ACTIVE',
+    iban VARCHAR(34) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (account_id),
-    CONSTRAINT fk_account_client FOREIGN KEY (client_id, abi) REFERENCES client(client_id, abi)
+    CONSTRAINT fk_account_client FOREIGN KEY (client_id, abi) REFERENCES client(client_id, abi),
+    CONSTRAINT uk_account_number UNIQUE (account_number),
+    CONSTRAINT uk_iban UNIQUE (iban)
 );
 
 CREATE TABLE account_holder (

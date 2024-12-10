@@ -4,9 +4,9 @@ INSERT INTO client (client_id, abi, name) VALUES
 ('CLIENT02', '56789', 'Test Bank 2');
 
 -- Insert test accounts
-INSERT INTO account (account_id, client_id, abi, account_type) VALUES
-('IT60X0542811101000000123456', 'CLIENT01', '01234', 'CHECKING'),
-('IT60X0542811101000000789012', 'CLIENT02', '56789', 'SAVINGS');
+INSERT INTO account (account_id, client_id, abi, account_type, account_number, status, iban) VALUES
+('IT60X0542811101000000123456', 'CLIENT01', '01234', 'CHECKING', 'ACC001', 'ACTIVE', 'IT60X0542811101000000123456'),
+('IT60X0542811101000000789012', 'CLIENT02', '56789', 'SAVINGS', 'ACC002', 'ACTIVE', 'IT60X0542811101000000789012');
 
 -- Insert test account holders
 INSERT INTO account_holder (holder_id, client_id, abi, account_id, first_name, last_name, fiscal_code) VALUES
