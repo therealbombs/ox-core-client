@@ -45,9 +45,15 @@ public class ClientServiceImpl implements ClientService {
     @Override
     @Transactional(readOnly = true)
     public boolean validateClient(String clientId) {
-        log.debug("Validating client with ID: {}", clientId);
+        return existsByClientId(clientId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean existsByClientId(String clientId) {
+        log.debug("Checking if client exists with ID: {}", clientId);
         boolean exists = clientRepository.existsByClientId(clientId);
-        log.debug("Client validation result for ID {}: {}", clientId, exists);
+        log.debug("Client existence check result for ID {}: {}", clientId, exists);
         return exists;
     }
 }
