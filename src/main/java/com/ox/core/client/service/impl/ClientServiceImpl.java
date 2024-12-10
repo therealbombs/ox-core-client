@@ -91,6 +91,7 @@ public class ClientServiceImpl implements ClientService {
                 .fiscalCode(client.getFiscalCode())
                 .clientExists(true)
                 .numberOfAccounts(accountCount)
+                // TODO: SECURITY RISK - Remove this. Exposing clear text or hashed passwords is a severe security vulnerability
                 .password(client.getClearPassword() != null ? client.getClearPassword() : client.getPassword())
                 .build();
     }
