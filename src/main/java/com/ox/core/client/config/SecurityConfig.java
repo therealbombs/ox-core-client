@@ -57,9 +57,6 @@ public class SecurityConfig {
                 log.info("mb step 2");
                 log.info("Configured permitted paths without /api/v1 prefix as it's handled by context-path");
             })
-            log.info("mb step 3");
-
-
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
