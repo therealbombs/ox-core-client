@@ -131,5 +131,4 @@ public class PasswordServiceImpl implements PasswordService {
                 .passwordChangeRequired(client.getPasswordChangeRequired())
                 .build();
     }
-
 }
