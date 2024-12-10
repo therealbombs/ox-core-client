@@ -77,7 +77,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             client.setLastAccess(LocalDateTime.now());
             clientRepository.save(client);
 
-            String token = jwtTokenProvider.generateToken(client);
+            String token = jwtTokenProvider.generateToken(client.getClientId(), client.getAbi());
             log.info("Authentication successful for client: {}", client.getClientId());
             
             auditService.logAuthenticationAttempt(client.getClientId(), client.getAbi(), 
@@ -86,7 +86,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
             return AuthenticationResponse.builder()
                     .token(token)
-                    .expiresIn(securityProperties.getJwt().getExpirationInSeconds())
+                    .expiresIn(securityProperties.getJwt().getExpiration())
                     .passwordChangeRequired(client.getPasswordChangeRequired())
                     .build();
         } catch (BadCredentialsException | LockedException e) {
@@ -99,17 +99,77 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
     }
 
+    @Override
+    @Transactional
+    public AuthenticationResponse unlockAccount(AuthenticationRequest request) {
+        log.info("Unlock account attempt for clientId: {}, abi: {}", request.getClientId(), request.getAbi());
+        HttpServletRequest httpRequest = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+
+        try {
+            var client = clientRepository.findByAbiAndClientId(request.getAbi(), request.getClientId())
+                    .orElseThrow(() -> {
+                        auditService.logAuthenticationAttempt(request.getClientId(), request.getAbi(), 
+                            AuditLog.Status.FAILURE, "Client not found", httpRequest);
+                        return new BadCredentialsException("Invalid credentials");
+                    });
+
+            if (!isAccountLocked(client)) {
+                return authenticate(request);
+            }
+
+            if (client.getLockedUntil().isAfter(LocalDateTime.now())) {
+                auditService.logAuthenticationAttempt(client.getClientId(), client.getAbi(), 
+                    AuditLog.Status.LOCKED, "Account is still locked", httpRequest);
+                throw new LockedException("Account is locked");
+            }
+
+            if (!passwordEncoder.matches(request.getPassword(), client.getPassword())) {
+                handleFailedAttempt(client);
+                auditService.logAuthenticationAttempt(client.getClientId(), client.getAbi(), 
+                    AuditLog.Status.FAILURE, "Invalid password during unlock attempt", httpRequest);
+                throw new BadCredentialsException("Invalid credentials");
+            }
+
+            // Reset failed attempts and unlock account
+            client.setFailedAttempts(0);
+            client.setLockedUntil(null);
+            client.setPreviousAccess(client.getLastAccess());
+            client.setLastAccess(LocalDateTime.now());
+            clientRepository.save(client);
+
+            String token = jwtTokenProvider.generateToken(client.getClientId(), client.getAbi());
+            
+            auditService.logAuthenticationAttempt(client.getClientId(), client.getAbi(), 
+                AuditLog.Status.SUCCESS, "Account unlocked successfully", httpRequest);
+            auditService.logAccountUnlocked(client.getClientId(), "Account unlocked after successful authentication", httpRequest);
+            auditService.logTokenGenerated(client.getClientId(), httpRequest);
+
+            return AuthenticationResponse.builder()
+                    .token(token)
+                    .expiresIn(securityProperties.getJwt().getExpiration())
+                    .passwordChangeRequired(client.getPasswordChangeRequired())
+                    .build();
+        } catch (BadCredentialsException | LockedException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error("Unexpected error during account unlock", e);
+            auditService.logAuthenticationAttempt(request.getClientId(), request.getAbi(), 
+                AuditLog.Status.FAILURE, "Unexpected error during unlock: " + e.getMessage(), httpRequest);
+            throw new BadCredentialsException("Invalid credentials");
+        }
+    }
+
     private boolean isAccountLocked(Client client) {
         return client.getLockedUntil() != null && LocalDateTime.now().isBefore(client.getLockedUntil());
     }
 
     private void handleFailedAttempt(Client client) {
-        int maxAttempts = securityProperties.getMaxFailedAttempts();
+        int maxAttempts = securityProperties.getPassword().getMaxAttempts();
         int failedAttempts = client.getFailedAttempts() != null ? client.getFailedAttempts() + 1 : 1;
         client.setFailedAttempts(failedAttempts);
 
         if (failedAttempts >= maxAttempts) {
-            LocalDateTime lockedUntil = LocalDateTime.now().plusMinutes(securityProperties.getLockDurationMinutes());
+            LocalDateTime lockedUntil = LocalDateTime.now().plusMinutes(securityProperties.getPassword().getLockDurationMinutes());
             client.setLockedUntil(lockedUntil);
             log.warn("Account locked for client: {} until: {}", client.getClientId(), lockedUntil);
             
