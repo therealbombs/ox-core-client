@@ -74,8 +74,9 @@ public class InquiryController {
     public ResponseEntity<InquiryResponse> inquireClient(
             @Valid @RequestBody InquiryRequest request
     ) {
-        log.debug("Received inquiry request for ABI: {}, fiscal code: {}", request.getAbi(), request.getFiscalCode());
+        log.info("Received inquiry request for ABI: {}, fiscal code: {}", request.getAbi(), request.getFiscalCode());
         InquiryResponse response = clientService.inquireClient(request);
+        log.info("Inquiry response: clientExists={}, numberOfAccounts={}", response.isClientExists(), response.getNumberOfAccounts());
         return ResponseEntity.ok(response);
     }
 }
