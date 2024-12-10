@@ -31,50 +31,43 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
-        try {
-            log.debug("Processing request to {}", request.getRequestURI());
-            final String authHeader = request.getHeader("Authorization");
+        final String authHeader = request.getHeader("Authorization");
+        final String jwt;
+        final String clientId;
 
-            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                log.debug("No valid authorization header found for request to {}", request.getRequestURI());
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        try {
+            jwt = authHeader.substring(7);
+            
+            if (!jwtTokenProvider.validateToken(jwt)) {
+                log.warn("Invalid JWT token");
                 filterChain.doFilter(request, response);
                 return;
             }
 
-            log.debug("Found authorization header for request to {}", request.getRequestURI());
-            final String jwt = authHeader.substring(7);
-            
-            try {
-                String clientId = jwtTokenProvider.extractClientId(jwt);
-                log.debug("Extracted clientId from token: {}", clientId);
-
-                if (clientId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                    log.debug("Validating client: {}", clientId);
-                    
-                    if (clientService.validateClient(clientId) && jwtTokenProvider.isTokenValid(jwt)) {
-                        log.debug("Client validation successful for: {}", clientId);
-                        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                                clientId,
-                                null,
-                                Collections.emptyList()
-                        );
-                        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                        SecurityContextHolder.getContext().setAuthentication(authToken);
-                        log.debug("Successfully set authentication in SecurityContext for client: {}", clientId);
-                    } else {
-                        log.warn("Client validation failed for: {}", clientId);
-                    }
+            clientId = jwtTokenProvider.extractClientId(jwt);
+            if (clientId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                if (clientService.existsByClientId(clientId)) {
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                            clientId,
+                            null,
+                            Collections.emptyList()
+                    );
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                    log.debug("Authentication successful for client: {}", clientId);
+                } else {
+                    log.warn("Client not found: {}", clientId);
                 }
-            } catch (Exception e) {
-                log.error("Error processing token: {}", e.getMessage());
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                return;
             }
-
-            filterChain.doFilter(request, response);
         } catch (Exception e) {
-            log.error("Unexpected error in JWT filter: {}", e.getMessage(), e);
-            response.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+            log.error("Error processing JWT token: {}", e.getMessage());
         }
+
+        filterChain.doFilter(request, response);
     }
 }
