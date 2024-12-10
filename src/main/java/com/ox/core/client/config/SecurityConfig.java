@@ -27,20 +27,39 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         log.info("Configuring security filter chain...");
         
+
+
         http
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> {
+                // Add detailed request logging
+                auth.requestMatchers(request -> {
+                    log.info("Security check for request:");
+                    log.info("  URI: {}", request.getRequestURI());
+                    log.info("  URL: {}", request.getRequestURL());
+                    log.info("  Context Path: {}", request.getContextPath());
+                    log.info("  Servlet Path: {}", request.getServletPath());
+                    log.info("  Path Info: {}", request.getPathInfo());
+                    log.info("  Query String: {}", request.getQueryString());
+                    log.info("  Method: {}", request.getMethod());
+                    return false;
+                }).permitAll();
+
+                log.info("mb step 1");
                 auth.requestMatchers(
-                    new AntPathRequestMatcher("/api/v1/auth/**"),
+                    new AntPathRequestMatcher("/auth/**"),  
                     new AntPathRequestMatcher("/swagger-ui/**"),
                     new AntPathRequestMatcher("/swagger-ui.html"),
                     new AntPathRequestMatcher("/v3/api-docs/**"),
                     new AntPathRequestMatcher("/h2-console/**")
                 ).permitAll()
                 .anyRequest().authenticated();
-                
+                log.info("mb step 2");
                 log.info("Configured permitted paths without /api/v1 prefix as it's handled by context-path");
             })
+            log.info("mb step 3");
+
+
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
