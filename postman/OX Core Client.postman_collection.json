@@ -21,7 +21,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"clientId\": \"C001\",\n    \"abi\": \"01234\",\n    \"password\": \"Password123!\"\n}"
+                            "raw": "{\n    \"clientId\": \"{{clientId}}\",\n    \"abi\": \"{{abi}}\",\n    \"password\": \"{{password}}\"\n}"
                         },
                         "url": {
                             "raw": "{{baseUrl}}/auth/login",
@@ -38,7 +38,7 @@
                                 "header": [],
                                 "body": {
                                     "mode": "raw",
-                                    "raw": "{\n    \"clientId\": \"C001\",\n    \"abi\": \"01234\",\n    \"password\": \"Password123!\"\n}"
+                                    "raw": "{\n    \"clientId\": \"{{clientId}}\",\n    \"abi\": \"{{abi}}\",\n    \"password\": \"{{password}}\"\n}"
                                 },
                                 "url": {
                                     "raw": "{{baseUrl}}/auth/login"
@@ -53,7 +53,7 @@
                                     "value": "application/json"
                                 }
                             ],
-                            "body": "{\n    \"clientId\": \"C001\",\n    \"abi\": \"01234\",\n    \"token\": \"eyJhbGciOiJIUzI1NiJ9...\",\n    \"remainingAttempts\": 3,\n    \"passwordChangeRequired\": false,\n    \"lockedUntil\": null\n}"
+                            "body": "{\n    \"clientId\": \"{{clientId}}\",\n    \"abi\": \"{{abi}}\",\n    \"token\": \"eyJhbGciOiJIUzI1NiJ9...\",\n    \"remainingAttempts\": 3,\n    \"passwordChangeRequired\": false,\n    \"lockedUntil\": null\n}"
                         }
                     ]
                 },
@@ -69,7 +69,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"clientId\": \"C001\",\n    \"abi\": \"01234\",\n    \"password\": \"Password123!\"\n}"
+                            "raw": "{\n    \"clientId\": \"{{clientId}}\",\n    \"abi\": \"{{abi}}\",\n    \"password\": \"{{password}}\"\n}"
                         },
                         "url": {
                             "raw": "{{baseUrl}}/auth/unlock",
@@ -86,7 +86,7 @@
                                 "header": [],
                                 "body": {
                                     "mode": "raw",
-                                    "raw": "{\n    \"clientId\": \"C001\",\n    \"abi\": \"01234\",\n    \"password\": \"Password123!\"\n}"
+                                    "raw": "{\n    \"clientId\": \"{{clientId}}\",\n    \"abi\": \"{{abi}}\",\n    \"password\": \"{{password}}\"\n}"
                                 },
                                 "url": {
                                     "raw": "{{baseUrl}}/auth/unlock"
@@ -101,7 +101,7 @@
                                     "value": "application/json"
                                 }
                             ],
-                            "body": "{\n    \"clientId\": \"C001\",\n    \"abi\": \"01234\",\n    \"token\": \"eyJhbGciOiJIUzI1NiJ9...\",\n    \"remainingAttempts\": 3,\n    \"passwordChangeRequired\": false,\n    \"lockedUntil\": null\n}"
+                            "body": "{\n    \"clientId\": \"{{clientId}}\",\n    \"abi\": \"{{abi}}\",\n    \"token\": \"eyJhbGciOiJIUzI1NiJ9...\",\n    \"remainingAttempts\": 3,\n    \"passwordChangeRequired\": false,\n    \"lockedUntil\": null\n}"
                         }
                     ]
                 }
@@ -127,7 +127,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"clientId\": \"C001\",\n    \"abi\": \"01234\",\n    \"currentPassword\": \"Password123!\",\n    \"newPassword\": \"NewPassword123!\"\n}"
+                            "raw": "{\n    \"clientId\": \"{{clientId}}\",\n    \"abi\": \"{{abi}}\",\n    \"currentPassword\": \"{{password}}\",\n    \"newPassword\": \"{{newPassword}}\"\n}"
                         },
                         "url": {
                             "raw": "{{baseUrl}}/password/change",
