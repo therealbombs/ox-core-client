@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService {
-
     private final AccountRepository accountRepository;
 
     @Override
@@ -40,10 +39,12 @@ public class AccountServiceImpl implements AccountService {
 
         return AccountResponse.builder()
                 .accountId(account.getAccountId())
+                .abi(account.getAbi())
                 .accountType(account.getAccountType())
                 .accountNumber(account.getAccountNumber())
                 .status(account.getStatus())
                 .iban(account.getIban())
+                .balance(account.getBalance())
                 .holders(holders)
                 .build();
     }

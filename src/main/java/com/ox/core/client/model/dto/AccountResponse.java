@@ -11,10 +11,12 @@ import java.util.List;
 @Builder
 public class AccountResponse {
     private String accountId;
+    private String abi;
     private AccountType accountType;
     private String accountNumber;
     private AccountStatus status;
     private String iban;
+    private Double balance;
     private List<AccountHolderInfo> holders;
 
     @Data
