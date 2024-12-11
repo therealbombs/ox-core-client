@@ -1,6 +1,7 @@
 package com.ox.core.client.controller;
 
 import com.ox.core.client.model.dto.AccountsResponse;
+import com.ox.core.client.security.JwtTokenProvider;
 import com.ox.core.client.service.AccountService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/banks/{abi}/clients/{clientId}/accounts")
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AccountController {
 
     private final AccountService accountService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @GetMapping
     @Operation(summary = "Get client accounts", description = "Get all accounts for a client")
@@ -26,5 +29,14 @@ public class AccountController {
             @PathVariable String clientId
     ) {
         return ResponseEntity.ok(accountService.getClientAccounts(abi, clientId));
+    }
+
+    @GetMapping("/total-balance")
+    @Operation(summary = "Get total balance", description = "Get total balance across all accounts for authenticated client")
+    public ResponseEntity<Double> getTotalBalance(HttpServletRequest request) {
+        String token = request.getHeader("Authorization").substring(7);
+        String clientId = jwtTokenProvider.extractClientId(token);
+        String abi = jwtTokenProvider.extractAbi(token);
+        return ResponseEntity.ok(accountService.getTotalBalance(abi, clientId));
     }
 }

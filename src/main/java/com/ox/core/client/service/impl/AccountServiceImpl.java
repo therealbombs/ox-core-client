@@ -32,6 +32,15 @@ public class AccountServiceImpl implements AccountService {
                 .build();
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Double getTotalBalance(String abi, String clientId) {
+        List<Account> accounts = accountRepository.findByAbiAndClientId(abi, clientId);
+        return accounts.stream()
+                .mapToDouble(Account::getBalance)
+                .sum();
+    }
+
     private AccountResponse mapToAccountResponse(Account account) {
         List<AccountResponse.AccountHolderInfo> holders = account.getAccountHolders().stream()
                 .map(this::mapToAccountHolderInfo)
