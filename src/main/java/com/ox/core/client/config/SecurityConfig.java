@@ -29,12 +29,14 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> 
                 auth.requestMatchers(
+                    new AntPathRequestMatcher("/api/v1/auth/**"),
                     new AntPathRequestMatcher("/auth/**"),
                     new AntPathRequestMatcher("/swagger-ui/**"),
                     new AntPathRequestMatcher("/swagger-ui.html"),
                     new AntPathRequestMatcher("/v3/api-docs/**"),
                     new AntPathRequestMatcher("/h2-console/**")
                 ).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/api/v1/**")).authenticated()
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> 
