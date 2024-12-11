@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping("/banks/{abi}/clients/{clientId}/accounts")
+@RequestMapping("/api/v1/accounts")
 @RequiredArgsConstructor
 @Tag(name = "Accounts", description = "Account management API")
 public class AccountController {
@@ -22,7 +22,7 @@ public class AccountController {
     private final AccountService accountService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    @GetMapping
+    @GetMapping("/by-bank/{abi}/client/{clientId}")
     @Operation(summary = "Get client accounts", description = "Get all accounts for a client")
     public ResponseEntity<AccountsResponse> getClientAccounts(
             @PathVariable String abi,
@@ -38,5 +38,14 @@ public class AccountController {
         String clientId = jwtTokenProvider.extractClientId(token);
         String abi = jwtTokenProvider.extractAbi(token);
         return ResponseEntity.ok(accountService.getTotalBalance(abi, clientId));
+    }
+
+    @GetMapping
+    @Operation(summary = "Get accounts", description = "Get all accounts for authenticated client")
+    public ResponseEntity<AccountsResponse> getAccounts(HttpServletRequest request) {
+        String token = request.getHeader("Authorization").substring(7);
+        String clientId = jwtTokenProvider.extractClientId(token);
+        String abi = jwtTokenProvider.extractAbi(token);
+        return ResponseEntity.ok(accountService.getClientAccounts(abi, clientId));
     }
 }
